@@ -1,0 +1,28 @@
+@(projects : List[Project])
+
+<link rel="stylesheet" media="screen" href="@routes.Assets.versioned("css/bootstrap.min.css")">
+
+<section>
+    <div>
+        <article>
+            <table style="margin-left: auto; margin-right: auto;">
+            @for(i <- 0 to projects.size() - 1) {
+                <tr>
+                    <td align="center">@{i + 1}&#46;</td>
+                    <td align="center"><a href="#">@projects.get(i).getOwnerId()</a></td>
+                    <td align="center">@projects.get(i).getTimeSubmitted()&#44;</td>
+                    <td align="left"><a href="#">@projects.get(i).getTitle()</a>&#44;</td>
+                    <td align="left">type:&nbsp;@projects.get(i).getType()&#44;</td>
+                    <td align="left">skills:
+                    @for(job <- projects.get(i).getJobs()) {
+                        &nbsp;<a href="@routes.ProjectController.findProjectsByJobId(job.getId())">@job.getName()</a>
+                    }
+                    &#44;</td>
+                    <td><a href="#">Stats</a>&#46;&nbsp;</td>
+                    <td><a href="#">Readability</a>&#46;</td>
+                </tr>
+            }
+            </table>
+        </article>
+    </div>
+</section>

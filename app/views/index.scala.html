@@ -1,0 +1,45 @@
+@()
+
+
+<!DOCTYPE html>
+<html lang="en">
+    <header>
+        <title>Freelancelot</title>
+        <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("css/search_page.css")">
+        <script type="text/javascript" src="@routes.Assets.versioned("js/jquery-3.6.0.min.js")"></script>
+        <script type="text/javascript">
+                var maxSearchCount = 10;
+                var currentSearchCount = 1;
+                function searchProjectsByTerms() {
+                    if (currentSearchCount <= maxSearchCount) {
+                        var searchTermsValue = $('#searchTerms').val();
+                        var fleshReadingEaseIndex = 70.5; // to be calculated
+                        var fkgl = 6.2 // to be calculated
+                        var header = $('<h4>Search terms: ' + searchTermsValue + ' : Flesh Reading Ease Index '
+                                + fleshReadingEaseIndex + '. FKGL ' + fkgl + '<h4>')
+                        $.get('/project/' + searchTermsValue, function (data) {
+                            $('#search_result').append(header).append(data);
+                        });
+                        currentSearchCount += 1;
+                    } else {
+                        alert('We could only search for ' + maxSearchCount + ' times.');
+                    }
+                }
+        </script>
+    </header>
+    <body>
+        <section style="text-align: center;">
+            <div>
+                <article>
+                    <h2 style="margin-top: 50px;">Welcome to Freelancelot</h2>
+                    <div class="search_input">
+                        <i class="fa fa-search" id="i-advanced-search-i"></i>
+                        <input id="searchTerms" type="text" id="i-advanced-search" placeholder="Enter search terms"/>
+                        &nbsp;&nbsp;<button class="btn" onclick="searchProjectsByTerms();">Go</button>
+                    </div>
+                    <div id="search_result"></div>
+                </article>
+            </div>
+        </section>
+    </body>
+</html>
