@@ -8,14 +8,14 @@
         <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("css/search_page.css")">
         <script type="text/javascript" src="@routes.Assets.versioned("js/jquery-3.6.0.min.js")"></script>
         <script type="text/javascript">
-                var maxSearchCount = 10;
-                var currentSearchCount = 1;
+                const maxSearchCount = 10;
+                let currentSearchCount = 1;
                 function searchProjectsByTerms() {
                     if (currentSearchCount <= maxSearchCount) {
-                        var searchTermsValue = $('#searchTerms').val();
-                        var fleshReadingEaseIndex = 70.5; // to be calculated
-                        var fkgl = 6.2 // to be calculated
-                        var header = $('<h4>Search terms: ' + searchTermsValue + ' : Flesh Reading Ease Index '
+                        const searchTermsValue = $('#searchTerms').val();
+                        const fleshReadingEaseIndex = 70.5; // to be calculated
+                        const fkgl = 6.2 // to be calculated
+                        const header = $('<h4>Search terms: ' + searchTermsValue + ' : Flesh Reading Ease Index '
                                 + fleshReadingEaseIndex + '. FKGL ' + fkgl + '<h4>')
                         $.get('/project/' + searchTermsValue, function (data) {
                             $('#search_result').append(header).append(data);
