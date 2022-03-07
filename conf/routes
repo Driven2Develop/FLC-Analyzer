@@ -9,5 +9,8 @@ GET     /project/:searchTerms       controllers.HomeController.searchLatestTenPr
 # This controller searches projects by job id
 GET     /project/job/:jobId         controllers.ProjectController.findProjectsByJobId(jobId : Long)
 
+# User controller
+GET     /user/:userId               controllers.UserController.findUserById(userId: Long)
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
