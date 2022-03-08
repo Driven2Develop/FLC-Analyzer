@@ -17,6 +17,7 @@ public class ProjectService {
     private MyWSClient myWSClient;
     private final ObjectMapper mapper = new ObjectMapper();
     private static final String PROJECT_SEARCH_URL = "/projects/0.1/projects/all/?offset=0&limit=10&sort_field=time_submitted&job_details=true";
+    private static final String PROJECT_LIST_URL = "/projects/0.1/projects?limit=10";
 
     @Inject
     public ProjectService(MyWSClient myWSClient) {
@@ -39,5 +40,9 @@ public class ProjectService {
 
     public List<Project> findProjectsByJobId(long jobId) throws Exception {
         return parseResultJsonNode(this.myWSClient.initRequest(PROJECT_SEARCH_URL + "&jobs[]=" + jobId).get());
+    }
+
+    public List<Project> findProjectsByOwnerId(long ownerId) throws Exception {
+        return parseResultJsonNode(this.myWSClient.initRequest(PROJECT_LIST_URL + "&owners[]=" + ownerId).get());
     }
 }

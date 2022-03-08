@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
@@ -22,6 +23,7 @@ public class User {
     private Status status;
     private String primaryLanguage;
     private boolean isProfileVisible;
+    private List<Project> projects;
 
     public long getId() {
         return id;
@@ -103,5 +105,13 @@ public class User {
 
     public void setProfileVisible(boolean profileVisible) {
         isProfileVisible = profileVisible;
+    }
+
+    public List<Project> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(List<Project> projects) {
+        this.projects = projects;
     }
 }

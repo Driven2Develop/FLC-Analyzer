@@ -41,6 +41,8 @@
                     <td>@user.getRegistrationDate().format(DateTimeFormatter.ofPattern("dd MMM yyyy"))</td>
                 </tr>
             </table>
+        </article>
+        <article>
             <h2>
                 Verification
             </h2>
@@ -135,6 +137,19 @@
                     }
                     <td>
                 </tr>
+            </table>
+        </article>
+        <article>
+            <h2>
+                Last 10 projects
+            </h2>
+            <table>
+                @for(project <- user.getProjects()) {
+                    <tr>
+                        <td>@project.getTimeSubmitted()</td>
+                        <td>@project.getTitle()</td>
+                    </tr>
+                }
             </table>
         </article>
     </div>

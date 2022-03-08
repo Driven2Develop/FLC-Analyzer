@@ -10,12 +10,15 @@ import wsclient.MyWSClient;
 public class UserService {
 
     private MyWSClient myWSClient;
+    private ProjectService projectService;
+
     private static String EMPLOYER_SEARCH_URL = "/users/0.1/users/";
     private ObjectMapper mapper = new ObjectMapper();
 
     @Inject
-    public UserService(MyWSClient myWSClient) {
+    public UserService(MyWSClient myWSClient, ProjectService projectService) {
         this.myWSClient = myWSClient;
+        this.projectService = projectService;
     }
 
     private User parseResultJsonNode(JsonNode resultJsonNode) throws JsonProcessingException {
@@ -23,7 +26,9 @@ public class UserService {
     }
 
     public User findUserById(long userId) throws Exception {
-        return parseResultJsonNode(this.myWSClient.initRequest(EMPLOYER_SEARCH_URL  + "/" + userId).get());
+        User user =  parseResultJsonNode(this.myWSClient.initRequest(EMPLOYER_SEARCH_URL  + "/" + userId).get());
+        user.setProjects(projectService.findProjectsByOwnerId(userId));
+        return user;
     }
 
 }
