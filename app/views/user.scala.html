@@ -1,156 +1,88 @@
-@import java.time.format.DateTimeFormatter
+@import helpers.DateUtil
 @(user: User)
 
-<link rel="stylesheet" media="screen" href="@routes.Assets.versioned("css/bootstrap.min.css")">
+@displayVerification(text: String, value: Boolean) = {
+    <tr>
+        <td>
+            @if(value != null && value) {
+                <i class="fa fa-check-circle success"></i>
+            } else {
+                <i class="fa fa-times-circle error"></i>
+            }
+            @text
+        </td>
+    </tr>
+}
 
-<section>
-    <div>
-        <article>
-            <h1>
-                @user.getId() - @user.getDisplayName()
-            </h1>
-            <table>
-                <tr>
-                    <td>Email:</td>
-                    <td>
-                        @if(user.getEmail() == null || user.getEmail().isEmpty) {
-                            -
-                        } else {
-                            @user.getEmail()
-                        }
-                    </td>
-                </tr>
-                <tr>
-                    <td>Language:</td>
-                    <td>@user.getPrimaryLanguage()</td>
-                </tr>
-                <tr>
-                    <td>Country:</td>
-                    <td>
-                        @if(user.getLocation() != null && user.getLocation().getCity() != null) {
-                            @user.getLocation().getCity(), @user.getLocation().getCountry().getName()
-                        } else if(user.getLocation() != null && user.getLocation().getCity() == null) {
-                            @user.getLocation().getCountry().getName()
-                        } else {
-                            -
-                        }
-                    <td>
-                </tr>
-                <tr>
-                    <td>Joined date:</td>
-                    <td>@user.getRegistrationDate().format(DateTimeFormatter.ofPattern("dd MMM yyyy"))</td>
-                </tr>
-            </table>
-        </article>
-        <article>
-            <h2>
-                Verification
-            </h2>
-            <table>
-                <tr>
-                    <td>Freelancer verified user:</td>
-                    <td>
-                    @if(user.getStatus().getFreelancerVerifiedUser() != null && user.getStatus().getFreelancerVerifiedUser()) {
-                        Yes
+<link rel="stylesheet" media="screen" href="@routes.Assets.versioned("css/search_page.css")">
+
+<main>
+    <title>Freelancelot - @user.getDisplayName()</title>
+    <section>
+        <a href="/">< Back</a>
+        <h1>
+            @user.getDisplayName() (@user.getId())
+        </h1>
+        <table>
+            <tr>
+                <td>Email:</td>
+                <td>
+                    @if(user.getEmail() == null || user.getEmail().isEmpty) {
+                        -
                     } else {
-                        No
+                        @user.getEmail()
                     }
-                    <td>
-                </tr>
-                <tr>
-                    <td>Identity verified:</td>
-                    <td>
-                    @if(user.getStatus().getIdentityVerified() != null && user.getStatus().getIdentityVerified()) {
-                        Yes
+                </td>
+            </tr>
+            <tr>
+                <td>Language:</td>
+                <td>@user.getPrimaryLanguage()</td>
+            </tr>
+            <tr>
+                <td>Location:</td>
+                <td>
+                    @if(user.getLocation() != null && user.getLocation().getCity() != null) {
+                        @user.getLocation().getCity(), @user.getLocation().getCountry().getName()
+                    } else if(user.getLocation() != null && user.getLocation().getCity() == null) {
+                        @user.getLocation().getCountry().getName()
                     } else {
-                        No
+                        -
                     }
-                    <td>
-                </tr>
+                <td>
+            </tr>
+            <tr>
+                <td>Joined date:</td>
+                <td>@DateUtil.formatDateString(user.getRegistrationDate())</td>
+            </tr>
+        </table>
+    </section>
+    <section>
+        <h2>
+            Verification
+        </h2>
+        <table>
+            @displayVerification("Freelancer verified user", user.getStatus().getFreelancerVerifiedUser())
+            @displayVerification("Identity verified", user.getStatus().getIdentityVerified())
+            @displayVerification("Payment verified", user.getStatus().getPaymentVerified())
+            @displayVerification("Email verified", user.getStatus().getEmailVerified())
+            @displayVerification("Deposit made", user.getStatus().getDepositMade())
+            @displayVerification("Profile completed", user.getStatus().getProfileComplete())
+            @displayVerification("Phone verified", user.getStatus().getPhoneVerified())
+            @displayVerification("LinkedIn connected", user.getStatus().getLinkedinConnected())
+            @displayVerification("Facebook connected", user.getStatus().getFacebookConnected())
+        </table>
+    </section>
+    <section>
+        <h2>
+            Last 10 projects
+        </h2>
+        <table>
+            @for(project <- user.getProjects()) {
                 <tr>
-                    <td>Payment verified:</td>
-                    <td>
-                        @if(user.getStatus().getPaymentVerified() != null && user.getStatus().getPaymentVerified()) {
-                            Yes
-                        } else {
-                            No
-                        }
-                    <td>
+                    <td>@project.getTimeSubmitted()</td>
+                    <td>@project.getTitle()</td>
                 </tr>
-                <tr>
-                    <td>Email verified:</td>
-                    <td>
-                    @if(user.getStatus().getEmailVerified() != null && user.getStatus().getEmailVerified()) {
-                        Yes
-                    } else {
-                        No
-                    }
-                    <td>
-                </tr>
-                <tr>
-                    <td>Deposit made:</td>
-                    <td>
-                    @if(user.getStatus().getDepositMade() != null && user.getStatus().getDepositMade()) {
-                        Yes
-                    } else {
-                        No
-                    }
-                    <td>
-                </tr>
-                <tr>
-                    <td>Profile completed:</td>
-                    <td>
-                    @if(user.getStatus().getProfileComplete() != null && user.getStatus().getProfileComplete()) {
-                        Yes
-                    } else {
-                        No
-                    }
-                    <td>
-                </tr>
-                <tr>
-                    <td>Phone verified:</td>
-                    <td>
-                    @if(user.getStatus().getPhoneVerified() != null && user.getStatus().getPhoneVerified()) {
-                        Yes
-                    } else {
-                        No
-                    }
-                    <td>
-                </tr>
-                <tr>
-                    <td>LinkedIn connected:</td>
-                    <td>
-                    @if(user.getStatus().getLinkedinConnected() != null && user.getStatus().getLinkedinConnected()) {
-                        Yes
-                    } else {
-                        No
-                    }
-                    <td>
-                </tr>
-                <tr>
-                    <td>Facebook connected:</td>
-                    <td>
-                    @if(user.getStatus().getFacebookConnected() != null && user.getStatus().getFacebookConnected()) {
-                        Yes
-                    } else {
-                        No
-                    }
-                    <td>
-                </tr>
-            </table>
-        </article>
-        <article>
-            <h2>
-                Last 10 projects
-            </h2>
-            <table>
-                @for(project <- user.getProjects()) {
-                    <tr>
-                        <td>@project.getTimeSubmitted()</td>
-                        <td>@project.getTitle()</td>
-                    </tr>
-                }
-            </table>
-        </article>
-    </div>
-</section>
+            }
+        </table>
+    </section>
+</main>
