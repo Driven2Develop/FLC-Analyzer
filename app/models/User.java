@@ -5,12 +5,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.List;
 
-@JsonIgnoreProperties(ignoreUnknown=true)
+import static helpers.DateUtil.parseDate;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class User {
     private long id;
@@ -54,9 +54,7 @@ public class User {
     }
 
     public void setRegistrationDate(long registrationDate) {
-        this.registrationDate = Instant.ofEpochMilli(registrationDate * 1000L)
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate();;
+        this.registrationDate = parseDate(registrationDate);
     }
 
     public String getDisplayName() {

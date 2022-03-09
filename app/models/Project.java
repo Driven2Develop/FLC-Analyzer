@@ -33,7 +33,7 @@ public class Project {
         return timeSubmitted;
     }
 
-    public void setTimeSubmitted(long timeSubmitted) throws ParseException {
+    public void setTimeSubmitted(long timeSubmitted) {
         Date submittedDate = new Date(timeSubmitted * 1000L);
         this.timeSubmitted = stringFormat.format(submittedDate);
     }
