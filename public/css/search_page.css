@@ -1,5 +1,4 @@
-@import "font-awesome.min.css";
-@import "bootstrap.min.css";
+@import "main.css";
 
 .search_input input[type='text']{
     display: inline-block;

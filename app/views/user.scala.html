@@ -1,0 +1,88 @@
+@import helpers.DateUtil
+@(user: User)
+
+@displayVerification(text: String, value: Boolean) = {
+    <tr>
+        <td>
+            @if(value != null && value) {
+                <i class="fa fa-check-circle success"></i>
+            } else {
+                <i class="fa fa-times-circle error"></i>
+            }
+            @text
+        </td>
+    </tr>
+}
+
+<link rel="stylesheet" media="screen" href="@routes.Assets.versioned("css/search_page.css")">
+
+<main>
+    <title>Freelancelot - @user.getDisplayName()</title>
+    <section>
+        <a href="/">< Back</a>
+        <h1>
+            @user.getDisplayName() (@user.getId())
+        </h1>
+        <table>
+            <tr>
+                <td>Email:</td>
+                <td>
+                    @if(user.getEmail() == null || user.getEmail().isEmpty) {
+                        -
+                    } else {
+                        @user.getEmail()
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>Language:</td>
+                <td>@user.getPrimaryLanguage()</td>
+            </tr>
+            <tr>
+                <td>Location:</td>
+                <td>
+                    @if(user.getLocation() != null && user.getLocation().getCity() != null) {
+                        @user.getLocation().getCity(), @user.getLocation().getCountry().getName()
+                    } else if(user.getLocation() != null && user.getLocation().getCity() == null) {
+                        @user.getLocation().getCountry().getName()
+                    } else {
+                        -
+                    }
+                <td>
+            </tr>
+            <tr>
+                <td>Joined date:</td>
+                <td>@DateUtil.formatDateString(user.getRegistrationDate())</td>
+            </tr>
+        </table>
+    </section>
+    <section>
+        <h2>
+            Verification
+        </h2>
+        <table>
+            @displayVerification("Freelancer verified user", user.getStatus().getFreelancerVerifiedUser())
+            @displayVerification("Identity verified", user.getStatus().getIdentityVerified())
+            @displayVerification("Payment verified", user.getStatus().getPaymentVerified())
+            @displayVerification("Email verified", user.getStatus().getEmailVerified())
+            @displayVerification("Deposit made", user.getStatus().getDepositMade())
+            @displayVerification("Profile completed", user.getStatus().getProfileComplete())
+            @displayVerification("Phone verified", user.getStatus().getPhoneVerified())
+            @displayVerification("LinkedIn connected", user.getStatus().getLinkedinConnected())
+            @displayVerification("Facebook connected", user.getStatus().getFacebookConnected())
+        </table>
+    </section>
+    <section>
+        <h2>
+            Last 10 projects
+        </h2>
+        <table>
+            @for(project <- user.getProjects()) {
+                <tr>
+                    <td>@project.getTimeSubmitted()</td>
+                    <td>@project.getTitle()</td>
+                </tr>
+            }
+        </table>
+    </section>
+</main>
