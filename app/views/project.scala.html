@@ -1,3 +1,4 @@
+@import helpers.DateUtil
 @(projects : List[Project])
 
 <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("css/bootstrap.min.css")">
@@ -10,7 +11,7 @@
                 <tr>
                     <td text-align="center">@{i + 1}&#46;</td>
                     <td text-align="center"><a href="@routes.UserController.findUserById(projects.get(i).getOwnerId())">@projects.get(i).getOwnerId()</a></td>
-                    <td text-align="center">@projects.get(i).getTimeSubmitted()&#44;</td>
+                    <td text-align="center">@DateUtil.formatDateString(projects.get(i).getTimeSubmitted())&#44;</td>
                     <td text-align="left"><a href="#">@projects.get(i).getTitle()</a>&#44;</td>
                     <td text-align="left">type:&nbsp;@projects.get(i).getType()&#44;</td>
                     <td text-align="left">skills:

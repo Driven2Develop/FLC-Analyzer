@@ -4,22 +4,20 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
+
+import static helpers.DateUtil.parseDate;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class Project {
 
     private long ownerId;
-    private String timeSubmitted;
+    private LocalDate timeSubmitted;
     private String title;
     private String type;
     private List<Job> jobs;
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-    private SimpleDateFormat stringFormat = new SimpleDateFormat("MMM dd yyyy");
 
     public long getOwnerId() {
         return ownerId;
@@ -29,13 +27,12 @@ public class Project {
         this.ownerId = ownerId;
     }
 
-    public String getTimeSubmitted() {
+    public LocalDate getTimeSubmitted() {
         return timeSubmitted;
     }
 
     public void setTimeSubmitted(long timeSubmitted) {
-        Date submittedDate = new Date(timeSubmitted * 1000L);
-        this.timeSubmitted = stringFormat.format(submittedDate);
+        this.timeSubmitted = parseDate(timeSubmitted);
     }
 
     public String getTitle() {
