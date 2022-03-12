@@ -16,7 +16,7 @@ public class UserController extends Controller {
     }
 
     public Result findUserById(long userId) throws Exception {
-        User user = userService.findUserById(userId);
+        User user = userService.findUserAndProjectsById(userId);
         return ok(views.html.user.render(user));
     }
 }
