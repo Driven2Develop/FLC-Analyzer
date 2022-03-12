@@ -26,7 +26,11 @@ public class UserService {
     }
 
     public User findUserById(long userId) throws Exception {
-        User user =  parseResultJsonNode(this.myWSClient.initRequest(EMPLOYER_SEARCH_URL  + "/" + userId).get());
+        return parseResultJsonNode(this.myWSClient.initRequest(EMPLOYER_SEARCH_URL + "/" + userId).get());
+    }
+
+    public User findUserAndProjectsById(long userId) throws Exception {
+        User user = findUserById(userId);
         user.setProjects(projectService.findProjectsByOwnerId(userId));
         return user;
     }
