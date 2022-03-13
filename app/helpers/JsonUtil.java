@@ -14,6 +14,7 @@ import java.util.List;
  * Helper class for parsing JSON responses
  * @author Mengqi Liu
  * @author Bowen Cheng
+ * @author Yvonne Lee
  */
 public class JsonUtil {
 
@@ -37,4 +38,18 @@ public class JsonUtil {
         }
         return projects;
     }
+
+    /**
+     * Util method used for extracting JSON response from server after an HTTP call
+     *
+     * @param resultJsonNode Raw type of response, to be parsed
+     * @param classType Class to parse raw response to
+     * @return Generic object extracted from JSON response
+     * @throws JsonProcessingException thrown if failed to process JSON into given type
+     * @author Yvonne Lee
+     */
+    public static <T> T parseResultJsonNode(JsonNode resultJsonNode, Class<T> classType) throws JsonProcessingException {
+        return MAPPER.treeToValue(resultJsonNode, classType);
+    }
+
 }

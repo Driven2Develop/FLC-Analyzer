@@ -5,6 +5,10 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Helper class for Date-related operations
+ * @author Yvonne Lee
+ */
 public class DateUtil {
 
     public static String DATE_FORMAT = "MMM dd yyyy";
