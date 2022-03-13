@@ -13,13 +13,13 @@
                 function searchProjectsByTerms() {
                     if (currentSearchCount <= maxSearchCount) {
                         const searchTermsValue = $('#searchTerms').val();
-                        const fleshReadingEaseIndex = 70.5; // to be calculated
-                        const fkgl = 6.2 // to be calculated
-                        const header = $('<h4>Search terms: ' + searchTermsValue + ' : Flesh Reading Ease Index '
-                                + fleshReadingEaseIndex + '. FKGL ' + fkgl + '<h4>')
-                        $.get('/project/' + searchTermsValue, function (data) {
-                            $('#search_result').append(header).append(data);
-                        });
+                        const readability = `<h4>Search terms: ${searchTermsValue} : Flesh Reading Ease Index: ??? . FKGL: ???<h4>`;
+                        const globalStats = `<p><a href="/stats/global/${searchTermsValue}">Global Stats</a></p>`;
+
+                        $.get(`/project/${searchTermsValue}`,
+                                data => {
+                                    $('#search_result').append(readability).append(globalStats).append(data);
+                                });
                         currentSearchCount += 1;
                     } else {
                         alert('We could only search for ' + maxSearchCount + ' times.');

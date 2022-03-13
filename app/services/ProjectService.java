@@ -1,37 +1,22 @@
 package services;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.inject.Inject;
 import models.Project;
 import wsclient.MyWSClient;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+
+import static helpers.JsonUtil.parseResultJsonNode;
 
 public class ProjectService {
 
     private MyWSClient myWSClient;
-    private final ObjectMapper mapper = new ObjectMapper();
     private static final String PROJECT_SEARCH_URL = "/projects/0.1/projects/all/?offset=0&limit=10&sort_field=time_submitted&job_details=true";
     private static final String PROJECT_LIST_URL = "/projects/0.1/projects?limit=10";
 
     @Inject
     public ProjectService(MyWSClient myWSClient) {
         this.myWSClient = myWSClient;
-    }
-
-    private List<Project> parseResultJsonNode(JsonNode resultJsonNode) throws JsonProcessingException {
-        ArrayNode projectsArrayNode = (ArrayNode) resultJsonNode.get("projects");
-        Iterator<JsonNode> iterator = projectsArrayNode.elements();
-        List<Project> projects = new ArrayList<>();
-        while (iterator.hasNext()) {
-            projects.add(mapper.treeToValue(iterator.next(), Project.class));
-        }
-        return projects;
     }
 
     public List<Project> searchLatestTenProjects(String searchTerms) throws Exception {
