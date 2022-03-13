@@ -10,6 +10,9 @@ import java.util.List;
 
 import static helpers.DateUtil.parseDate;
 
+/**
+ * POJO class for user
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class User {

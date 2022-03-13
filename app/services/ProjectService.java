@@ -8,6 +8,9 @@ import java.util.List;
 
 import static helpers.JsonUtil.parseResultJsonNode;
 
+/**
+ * Service layer class for processing projects
+ */
 public class ProjectService {
 
     private MyWSClient myWSClient;
@@ -27,6 +30,14 @@ public class ProjectService {
         return parseResultJsonNode(this.myWSClient.initRequest(PROJECT_SEARCH_URL + "&jobs[]=" + jobId).get());
     }
 
+    /**
+     * Get projects by owner ID<br>
+     * Implemented using Stream API
+     *
+     * @param ownerId owner ID to retrieve projects from
+     * @return List of projects
+     * @author Yvonne Lee
+     */
     public List<Project> findProjectsByOwnerId(long ownerId) throws Exception {
         return parseResultJsonNode(this.myWSClient.initRequest(PROJECT_LIST_URL + "&owners[]=" + ownerId).get());
     }
