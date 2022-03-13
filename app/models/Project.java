@@ -18,6 +18,7 @@ public class Project {
     private String title;
     private String type;
     private List<Job> jobs;
+    private String previewDescription;
 
     public long getOwnerId() {
         return ownerId;
@@ -57,5 +58,13 @@ public class Project {
 
     public void setJobs(List<Job> jobs) {
         this.jobs = jobs;
+    }
+
+    public String getPreviewDescription() {
+        return previewDescription;
+    }
+
+    public void setPreviewDescription(String previewDescription) {
+        this.previewDescription = previewDescription;
     }
 }
