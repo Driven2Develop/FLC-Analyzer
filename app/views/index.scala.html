@@ -18,7 +18,7 @@
 
                         $.get(`/project/${searchTermsValue}`,
                                 data => {
-                                    $('#search_result').append(readability).append(globalStats).append(data);
+                                    $('#search_result').prepend(data).prepend(globalStats).prepend(readability);
                                 });
                         currentSearchCount += 1;
                     } else {

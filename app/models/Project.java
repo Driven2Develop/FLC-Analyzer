@@ -9,6 +9,11 @@ import java.util.List;
 
 import static helpers.DateUtil.parseDate;
 
+/**
+ * POJO class for Project object
+ *
+ * @author Mengqi Liu
+ */
 @JsonIgnoreProperties(ignoreUnknown=true)
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class Project {
