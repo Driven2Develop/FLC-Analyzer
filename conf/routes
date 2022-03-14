@@ -4,17 +4,17 @@
 
 # A home controller showing a home page and search projects by search terms.
 GET        /                                 controllers.HomeController.index
-GET        /project/:searchTerms             controllers.HomeController.searchLatestTenProjects(searchTerms : String)
+GET        /project/:searchTerms             controllers.HomeController.searchLatestTenProjects(searchTerms: String)
 
 # This controller searches projects by job id
-GET        /project/job/:jobId               controllers.ProjectController.findProjectsByJobId(jobId : Long)
+GET        /project/job/:jobId               controllers.ProjectController.findProjectsByJobId(jobId: Long)
 
 # User controller
 GET        /user/:userId                     controllers.UserController.findUserById(userId: Long)
 
 # Stats controller
-GET        /stats/global/:searchTerms        controllers.StatsController.getGlobalStats(searchTerms : String)
-GET        /stats/single/:projectDesc            controllers.StatsController.getProjectStats(projectDesc : String)
+GET        /stats/global/:searchTerms        controllers.StatsController.getGlobalStats(searchTerms: String)
+GET        /stats/single/:projectDesc            controllers.StatsController.getProjectStats(projectDesc: String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET        /assets/*file                     controllers.Assets.versioned(path="/public", file: Asset)

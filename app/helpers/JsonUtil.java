@@ -39,6 +39,16 @@ public class JsonUtil {
         return projects;
     }
 
+    public static <T> List<T> parseResultJsonNode(JsonNode resultJsonNode, Class<T> classType, String jsonNodeField) throws JsonProcessingException {
+        ArrayNode projectsArrayNode = (ArrayNode) resultJsonNode.get(jsonNodeField);
+        Iterator<JsonNode> iterator = projectsArrayNode.elements();
+        List<T> objects = new ArrayList<>();
+        while (iterator.hasNext()) {
+            objects.add(MAPPER.treeToValue(iterator.next(), classType));
+        }
+        return objects;
+    }
+
     /**
      * Util method used for extracting JSON response from server after an HTTP call
      *

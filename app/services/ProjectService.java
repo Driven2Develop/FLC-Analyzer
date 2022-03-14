@@ -5,6 +5,7 @@ import models.Project;
 import wsclient.MyWSClient;
 
 import java.util.List;
+import java.util.concurrent.CompletionStage;
 
 import static helpers.JsonUtil.parseResultJsonNode;
 
@@ -38,8 +39,9 @@ public class ProjectService {
      * @throws Exception exception
      * @author Mengqi Liu
      */
-    public List<Project> searchLatestTenProjects(String searchTerms) throws Exception {
-        return parseResultJsonNode(this.myWSClient.initRequest(PROJECT_SEARCH_URL + "&query=" + searchTerms).get());
+    public CompletionStage<List<Project>> searchLatestTenProjects(String searchTerms) {
+        searchTerms = searchTerms.trim().replace(" ", "%20");
+        return this.myWSClient.initRequest(PROJECT_SEARCH_URL + "&query=" + searchTerms).getListResults(Project.class, "projects");
     }
 
     /**
@@ -48,11 +50,10 @@ public class ProjectService {
      *
      * @param jobId id for one job defined in Freelancer API
      * @return Latest ten projects searched by the job id calling Freelancer API
-     * @throws Exception exception
      * @author Mengqi Liu
      */
-    public List<Project> findProjectsByJobId(long jobId) throws Exception {
-        return parseResultJsonNode(this.myWSClient.initRequest(PROJECT_SEARCH_URL + "&jobs[]=" + jobId).get());
+    public CompletionStage<List<Project>> findProjectsByJobId(long jobId) {
+        return this.myWSClient.initRequest(PROJECT_SEARCH_URL + "&jobs[]=" + jobId).getListResults(Project.class, "projects");
     }
 
     /**
