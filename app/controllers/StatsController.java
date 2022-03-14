@@ -30,29 +30,5 @@ public class StatsController extends Controller {
         this.httpExecutionContext = httpExecutionContext;
     }
 
-    /**
-     * Gets global stats and presents result to view
-     *
-     * @param searchTerms search text
-     * @return list of stats
-     * @author Bowen Cheng
-     */
-    public CompletionStage<Result> getGlobalStats(String searchTerms) {
-        return statsService.getGlobalStats(searchTerms)
-                .thenApplyAsync(stats -> ok(views.html.Stats.render(stats)), httpExecutionContext.current());
-    }
-
-    /**
-     * Gets global stats and presents result to view
-     *
-     * @param projectDesc project description to get stats from
-     * @return list of stats
-     * @author Bowen Cheng
-     */
-    public CompletionStage<Result> getProjectStats(String projectDesc) {
-        return CompletableFuture
-                .supplyAsync(() -> statsService.getProjectStats(projectDesc))
-                .thenApplyAsync((stats) -> ok(views.html.Stats.render(stats)));
-    }
 
 }
