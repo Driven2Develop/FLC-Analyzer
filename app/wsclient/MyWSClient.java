@@ -1,11 +1,17 @@
 package wsclient;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
 import play.libs.ws.WSBodyReadables;
 import play.libs.ws.WSBodyWritables;
 import play.libs.ws.WSClient;
 import play.libs.ws.WSRequest;
+
+import java.util.List;
+import java.util.concurrent.CompletionStage;
+
+import static helpers.JsonUtil.parseResultJsonNode;
 
 /**
  * Wrapper class for WSClient, providing methods to call Freelancer API asynchronously through http protocol<br/>
@@ -50,7 +56,7 @@ public class MyWSClient implements WSBodyReadables, WSBodyWritables {
     }
 
     /**
-     * call Freelancer API by http GET method asynchronously
+     * call Freelancer API by http GET method
      *
      * @return the json format result returned from Freelancer API
      * @author Mengqi Liu
@@ -59,5 +65,27 @@ public class MyWSClient implements WSBodyReadables, WSBodyWritables {
         JsonNode responseJsonNode = this.request.get().thenApply(r -> r.getBody(json())).toCompletableFuture().get();
         checkResponse(responseJsonNode);
         return responseJsonNode.findValue("result");
+    }
+
+    /**
+     * call Freelancer API by http GET method asynchronously
+     *
+     * @return the json format result returned from Freelancer API
+     * @author Mengqi Liu
+     */
+    public <T> CompletionStage<List<T>> getListResults(Class<T> classType, String jsonNodeField) {
+        return this.request.get()
+                .thenApplyAsync(r -> {
+                    JsonNode responseJsonNode = r.getBody(json());
+                    String status = responseJsonNode.findValue("status").textValue();
+                    if ("success".equalsIgnoreCase(status)) {
+                        try {
+                            return parseResultJsonNode(responseJsonNode.findValue("result"), classType, jsonNodeField);
+                        } catch (JsonProcessingException e) {
+
+                        }
+                    }
+                    return null;
+                });
     }
 }
