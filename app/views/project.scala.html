@@ -16,7 +16,7 @@
                     <td text-align="left">type:&nbsp;@projects.get(i).getType()&#44;</td>
                     <td text-align="left">skills:
                     @for(job <- projects.get(i).getJobs()) {
-                        &nbsp;<a href="@routes.ProjectController.findProjectsByJobId(job.getId())">@job.getName()</a>
+                        &nbsp;<a href="@routes.HomeController.findProjectsByJobId(job.getId())">@job.getName()</a>
                     }
                     &#44;</td>
                     <td><a href="@routes.StatsController.getProjectStats(projects.get(i).getPreviewDescription)">Stats</a>&#46;&nbsp;</td>

@@ -5,9 +5,7 @@
 # A home controller showing a home page and search projects by search terms.
 GET        /                                 controllers.HomeController.index
 GET        /project/:searchTerms             controllers.HomeController.searchLatestTenProjects(searchTerms: String)
-
-# This controller searches projects by job id
-GET        /project/job/:jobId               controllers.ProjectController.findProjectsByJobId(jobId: Long)
+GET        /project/job/:jobId               controllers.HomeController.findProjectsByJobId(jobId: Long)
 
 # User controller
 GET        /user/:userId                     controllers.UserController.findUserById(userId: Long)

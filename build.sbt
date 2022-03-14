@@ -1,7 +1,7 @@
 name := """flcAnalyzer"""
-organization := "com.example"
+organization := "com.freelancelot"
 
-version := "1.0-SNAPSHOT"
+version := "1.0.0"
 
 lazy val root = (project in file(".")).enablePlugins(PlayJava)
 
