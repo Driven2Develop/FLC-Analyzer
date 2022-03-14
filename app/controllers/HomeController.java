@@ -47,6 +47,7 @@ public class HomeController extends Controller {
      *
      * @param searchTerms search text input by user
      * @return Latest ten projects searched by the input terms through calling Freelancer API
+     * @@Ca
      * @author Mengqi Liu
      */
     public CompletionStage<Result> searchLatestTenProjects(String searchTerms) {
@@ -54,4 +55,15 @@ public class HomeController extends Controller {
         return searchProjectsResponse.thenApplyAsync(projects -> ok(views.html.project.render(projects)), httpExecutionContext.current());
     }
 
+    /**
+     * Search latest ten projects by skillId and present result to view asynchronously.
+     *
+     * @param skillId id for the skill defined in Freelancer API
+     * @return Latest ten projects searched by the skill id through calling Freelancer API
+     * @author Mengqi Liu
+     */
+    public CompletionStage<Result> findProjectsByJobId(long skillId) {
+        CompletionStage<List<Project>> searchProjectsResponse = projectService.findProjectsByJobId(skillId);
+        return searchProjectsResponse.thenApplyAsync(projects -> ok(views.html.project.render(projects)), httpExecutionContext.current());
+    }
 }
