@@ -6,6 +6,7 @@ import models.Stats;
 import wsclient.MyWSClient;
 
 import java.util.*;
+import java.util.concurrent.CompletionStage;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -13,6 +14,7 @@ import static helpers.JsonUtil.parseResultJsonNode;
 
 /**
  * Service layer class for processing stats
+ * @author Bowen Cheng
  */
 public class StatsService {
 
@@ -36,13 +38,18 @@ public class StatsService {
      *
      * @param searchTerms search text
      * @return List of status
-     * @throws Exception in case of processing error
      * @author Bowen Cheng
      */
-    public List<Stats> getGlobalStats(String searchTerms) throws Exception {
-        List<Project> results = parseResultJsonNode(this.myWSClient.initRequest(PROJECT_SEARCH_URL + "&query=" + searchTerms).get());
-        Stream<String> stringStream = results.stream().map(Project::getPreviewDescription);
-        return getStatsFromStringStream(stringStream);
+    public CompletionStage<List<Stats>> getGlobalStats(String searchTerms) {
+        CompletionStage<List<Project>> results = this.myWSClient
+                .initRequest(PROJECT_SEARCH_URL + "&query=" + searchTerms.trim().replace(" ", "%20"))
+                .getListResults(Project.class, "projects");
+
+        return results.thenApplyAsync(
+                projects -> {
+                    Stream<String> stringStream = projects.stream().map(Project::getPreviewDescription);
+                    return getStatsFromStringStream(stringStream);
+                });
     }
 
     /**

@@ -19,7 +19,7 @@
                         &nbsp;<a href="@routes.HomeController.findProjectsByJobId(job.getId())">@job.getName()</a>
                     }
                     &#44;</td>
-                    <td><a href="@routes.StatsController.getProjectStats(projects.get(i).getPreviewDescription)">Stats</a>&#46;&nbsp;</td>
+                    <td><a href="@routes.HomeController.getProjectStats(projects.get(i).getPreviewDescription)">Stats</a>&#46;&nbsp;</td>
                     <td><a href="#">Readability</a>&#46;</td>
                 </tr>
             }

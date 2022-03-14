@@ -1,19 +1,23 @@
 package controllers;
 
 import com.google.inject.Inject;
-import models.Stats;
+import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Controller;
 import play.mvc.Result;
 import services.StatsService;
 
-import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
 
 /**
  * Stats controller for retrieving global and project level stats
+ * @author Bowen Cheng
  */
 public class StatsController extends Controller {
 
     private StatsService statsService;
+    private HttpExecutionContext httpExecutionContext;
+
 
     /**
      * Constructor for DI
@@ -21,33 +25,10 @@ public class StatsController extends Controller {
      * @author Bowen Cheng
      */
     @Inject
-    public StatsController(StatsService statsService) {
+    public StatsController(StatsService statsService, HttpExecutionContext httpExecutionContext) {
         this.statsService = statsService;
+        this.httpExecutionContext = httpExecutionContext;
     }
 
-    /**
-     * Gets global stats and presents result to view
-     *
-     * @param searchTerms search text
-     * @return list of stats
-     * @throws Exception exception
-     * @author Bowen Cheng
-     */
-    public Result getGlobalStats(String searchTerms) throws Exception {
-        List<Stats> stats = statsService.getGlobalStats(searchTerms.trim().replace(" ", "%20"));
-        return ok(views.html.Stats.render(stats));
-    }
-
-    /**
-     * Gets global stats and presents result to view
-     *
-     * @param projectDesc project description to get stats from
-     * @return list of stats
-     * @author Bowen Cheng
-     */
-    public Result getProjectStats(String projectDesc) {
-        List<Stats> stats = statsService.getProjectStats(projectDesc);
-        return ok(views.html.Stats.render(stats));
-    }
 
 }
