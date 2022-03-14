@@ -11,6 +11,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import wsclient.MyWSClient;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -65,7 +66,7 @@ public class UserServiceTest {
 
         when(myWSClient.initRequest(any())).thenReturn(myWSClient);
         when(myWSClient.get()).thenReturn(buildUserFromJsonNode());
-        when(projectService.findProjectsByOwnerId(DEFAULT_USER_ID)).thenReturn(List.of(
+        when(projectService.findProjectsByOwnerId(DEFAULT_USER_ID)).thenReturn(Arrays.asList(
                 buildProject(test1Title, DEFAULT_USER_ID, DEFAULT_PROJECT_TYPE, Collections.emptyList(), 1647003600L),
                 buildProject(test2Title, DEFAULT_USER_ID, DEFAULT_PROJECT_TYPE, Collections.emptyList(), 1646139600L)
         ));
