@@ -13,6 +13,7 @@ import static helpers.JsonUtil.parseResultJsonNode;
  * Service layer class for processing projects
  *
  * @author Mengqi Liu
+ * @author Yvonne Lee
  */
 public class ProjectService {
 
@@ -64,7 +65,7 @@ public class ProjectService {
      * @return List of projects
      * @author Yvonne Lee
      */
-    public List<Project> findProjectsByOwnerId(long ownerId) throws Exception {
-        return parseResultJsonNode(this.myWSClient.initRequest(PROJECT_LIST_URL + "&owners[]=" + ownerId).get());
+    public CompletionStage<List<Project>> findProjectsByOwnerId(long ownerId) {
+        return this.myWSClient.initRequest(PROJECT_LIST_URL + "&owners[]=" + ownerId).getListResults(Project.class, "projects");
     }
 }

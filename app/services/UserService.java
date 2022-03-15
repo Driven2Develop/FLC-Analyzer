@@ -4,17 +4,18 @@ import com.google.inject.Inject;
 import models.User;
 import wsclient.MyWSClient;
 
-import static helpers.JsonUtil.parseResultJsonNode;
+import java.util.concurrent.CompletionStage;
 
 /**
  * User layer class for processing user
+ *
+ * @author Yvonne Lee
  */
 public class UserService {
 
     private MyWSClient myWSClient;
-    private ProjectService projectService;
 
-    private static String EMPLOYER_SEARCH_URL = "/users/0.1/users/";
+    private static String USER_SEARCH_URL = "/users/0.1/users/";
 
     /**
      * Constructor for DI
@@ -23,9 +24,8 @@ public class UserService {
      * @author Yvonne
      */
     @Inject
-    public UserService(MyWSClient myWSClient, ProjectService projectService) {
+    public UserService(MyWSClient myWSClient) {
         this.myWSClient = myWSClient;
-        this.projectService = projectService;
     }
 
     /**
@@ -35,21 +35,8 @@ public class UserService {
      * @return User
      * @author Yvonne Lee
      */
-    public User findUserById(long userId) throws Exception {
-        return parseResultJsonNode(this.myWSClient.initRequest(EMPLOYER_SEARCH_URL + "/" + userId).get(), User.class);
-    }
-
-    /**
-     * Get User and Projects by user ID<br>
-     *
-     * @param userId user ID to retrieve user details and project list
-     * @return User
-     * @author Yvonne Lee
-     */
-    public User findUserAndProjectsById(long userId) throws Exception {
-        User user = findUserById(userId);
-        user.setProjects(projectService.findProjectsByOwnerId(userId));
-        return user;
+    public CompletionStage<User> findUserById(long userId) {
+        return this.myWSClient.initRequest(USER_SEARCH_URL + "/" + userId).getResults(User.class);
     }
 
 }
