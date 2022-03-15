@@ -39,6 +39,16 @@ public class JsonUtil {
         return projects;
     }
 
+    /**
+     * Util method used for extracting a list of objects from JSON response from server after an HTTP call
+     *
+     * @param resultJsonNode Raw type of response, to be parsed
+     * @param classType Class to parse raw response to
+     * @param jsonNodeField the field name in json
+     * @return Generic list of objects extracted from JSON response
+     * @throws JsonProcessingException thrown if failed to process JSON into given type
+     * @author Yvonne Lee
+     */
     public static <T> List<T> parseResultJsonNode(JsonNode resultJsonNode, Class<T> classType, String jsonNodeField) throws JsonProcessingException {
         ArrayNode projectsArrayNode = (ArrayNode) resultJsonNode.get(jsonNodeField);
         Iterator<JsonNode> iterator = projectsArrayNode.elements();
