@@ -37,12 +37,11 @@ public class ProjectService {
      *
      * @param searchTerms the terms user inputs for searching related projects
      * @return Latest ten projects searched by the search terms calling Freelancer API
-     * @throws Exception exception
      * @author Mengqi Liu
      */
     public CompletionStage<List<Project>> searchLatestTenProjects(String searchTerms) {
-        searchTerms = searchTerms.trim().replace(" ", "%20");
-        return this.myWSClient.initRequest(PROJECT_SEARCH_URL + "&query=" + searchTerms).getListResults(Project.class, "projects");
+        return this.myWSClient.initRequest(PROJECT_SEARCH_URL + "&query=" + searchTerms.trim().replace(" ", "%20"))
+                .getListResults(Project.class, "projects");
     }
 
     /**
