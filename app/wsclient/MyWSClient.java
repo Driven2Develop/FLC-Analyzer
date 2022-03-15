@@ -24,6 +24,7 @@ public class MyWSClient implements WSBodyReadables, WSBodyWritables {
     private WSRequest request;
     private static final String FREELANCER_SANDBOX_URL = "https://www.freelancer-sandbox.com/api";
     private static final String OAUTH_ACCESS_TOKEN = "JN7EzdE5iivghNOYapxJqjvKr8iEHP";
+    private static final String OAUTH_HEADER_NAME = "freelancer-oauth-v1";
 
     /**
      * Constructor for DI
@@ -44,7 +45,7 @@ public class MyWSClient implements WSBodyReadables, WSBodyWritables {
      */
     public MyWSClient initRequest(String apiUrl) {
         this.request = ws.url(FREELANCER_SANDBOX_URL + apiUrl)
-                .addHeader("freelancer-oauth-v1", OAUTH_ACCESS_TOKEN);
+                .addHeader(OAUTH_HEADER_NAME, OAUTH_ACCESS_TOKEN);
         return this;
     }
 
