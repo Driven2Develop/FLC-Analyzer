@@ -1,6 +1,7 @@
 package services;
 
 import models.*;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -8,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import wsclient.MyWSClient;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
@@ -48,13 +50,22 @@ public class ProjectServiceTest {
     ));
 
     /**
+     * Setup data for tests
+     *
+     * @author Yvonne Lee
+     */
+    @Before
+    public void setup() {
+        prepareData();
+    }
+
+    /**
      * test method <code>searchLatestTenProjects</code> in class <code>ProjectService</code>
      *
      * @author Mengqi Liu
      */
     @Test
     public void testSearchLatestTenProjects() throws Exception {
-        prepareData();
         List<Project> projects = projectService.searchLatestTenProjects(SEARCH_TERMS_JAVA).toCompletableFuture().get();
         validateData(projects);
     }
@@ -66,8 +77,18 @@ public class ProjectServiceTest {
      */
     @Test
     public void testFindProjectsByJobId() throws Exception {
-        prepareData();
         List<Project> projects = projectService.findProjectsByJobId(SEARCH_JOB_ID_JAVA).toCompletableFuture().get();
+        validateData(projects);
+    }
+
+    /**
+     * test method <code>findProjectsByOwnerId</code> in class <code>ProjectService</code>
+     *
+     * @author Yvonne Lee
+     */
+    @Test
+    public void findProjectsByOwnerId() throws Exception {
+        List<Project> projects = projectService.findProjectsByOwnerId(DEFAULT_USER_ID).toCompletableFuture().get();
         validateData(projects);
     }
 
