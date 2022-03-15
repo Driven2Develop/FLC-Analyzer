@@ -3,10 +3,7 @@ package wsclient;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
-import play.libs.ws.WSBodyReadables;
-import play.libs.ws.WSBodyWritables;
-import play.libs.ws.WSClient;
-import play.libs.ws.WSRequest;
+import play.libs.ws.*;
 
 import java.util.List;
 import java.util.concurrent.CompletionStage;
@@ -76,13 +73,12 @@ public class MyWSClient implements WSBodyReadables, WSBodyWritables {
     public <T> CompletionStage<List<T>> getListResults(Class<T> classType, String jsonNodeField) {
         return this.request.get()
                 .thenApplyAsync(r -> {
-                    JsonNode responseJsonNode = r.getBody(json());
-                    String status = responseJsonNode.findValue(JSON_FIELD_STATUS).textValue();
-                    if (JSON_FIELD_SUCCESS.equalsIgnoreCase(status)) {
+                    JsonNode responseJsonNode = getResponseNode(r);
+                    if (isResponseSuccess(responseJsonNode)) {
                         try {
                             return parseResultJsonNode(responseJsonNode.findValue(JSON_FIELD_RESULT), classType, jsonNodeField);
                         } catch (JsonProcessingException e) {
-
+                            return null;
                         }
                     }
                     return null;
@@ -98,16 +94,49 @@ public class MyWSClient implements WSBodyReadables, WSBodyWritables {
     public <T> CompletionStage<T> getResults(Class<T> classType) {
         return this.request.get()
                 .thenApplyAsync(r -> {
-                    JsonNode responseJsonNode = r.getBody(json());
-                    String status = responseJsonNode.findValue("status").textValue();
-                    if ("success".equalsIgnoreCase(status)) {
+                    JsonNode responseJsonNode = getResponseNode(r);
+                    if (isResponseSuccess(responseJsonNode)) {
                         try {
-                            return parseResultJsonNode(responseJsonNode.findValue("result"), classType);
+                            return parseResultJsonNode(getResponseValue(responseJsonNode), classType);
                         } catch (JsonProcessingException e) {
-
+                            return null;
                         }
                     }
                     return null;
                 });
+    }
+
+    /**
+     * Get response JSON node
+     *
+     * @param response WS response from the server
+     * @return Entire response value
+     *
+     * @author Yvonne Lee
+     */
+    private JsonNode getResponseNode(WSResponse response) {
+        return response.getBody(json());
+    }
+
+    /**
+     * Check if response is success / not
+     * @param responseJsonNode Response value in JsonNode
+     * @return true: response is successful
+     *
+     * @author Yvonne Lee
+     */
+    private boolean isResponseSuccess(JsonNode responseJsonNode) {
+        String status = responseJsonNode.findValue(JSON_FIELD_STATUS).textValue();
+        return JSON_FIELD_SUCCESS.equalsIgnoreCase(status);
+    }
+
+    /**
+     * Get response body from <code>result</code> field
+     *
+     * @param responseJsonNode
+     * @return Response body in JsonNode
+     */
+    private JsonNode getResponseValue(JsonNode responseJsonNode) {
+        return responseJsonNode.findValue(JSON_FIELD_RESULT);
     }
 }
