@@ -1,0 +1,15 @@
+@(projects: List[Project])
+
+<section>
+    <h2>
+        Last 10 projects
+    </h2>
+    <table>
+        @for(project <- projects) {
+            <tr>
+                <td>@project.getTimeSubmitted()</td>
+                <td>@project.getTitle()</td>
+            </tr>
+        }
+    </table>
+</section>

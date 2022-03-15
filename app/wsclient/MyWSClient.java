@@ -89,4 +89,26 @@ public class MyWSClient implements WSBodyReadables, WSBodyWritables {
                     return null;
                 });
     }
+
+    /**
+     * call Freelancer API by http GET method asynchronously
+     *
+     * @return the json format result returned from Freelancer API
+     * @author Yvonne Lee
+     */
+    public <T> CompletionStage<T> getResults(Class<T> classType) {
+        return this.request.get()
+                .thenApplyAsync(r -> {
+                    JsonNode responseJsonNode = r.getBody(json());
+                    String status = responseJsonNode.findValue("status").textValue();
+                    if ("success".equalsIgnoreCase(status)) {
+                        try {
+                            return parseResultJsonNode(responseJsonNode.findValue("result"), classType);
+                        } catch (JsonProcessingException e) {
+
+                        }
+                    }
+                    return null;
+                });
+    }
 }

@@ -15,6 +15,18 @@
 }
 
 <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("css/search_page.css")">
+<script type="text/javascript" src="@routes.Assets.versioned("js/jquery-3.6.0.min.js")"></script>
+<script type="text/javascript">
+    function getUserProjects() {
+        $.get(`/user/@user.getId()/projects`,
+            data => {
+                $('#user_projects').prepend(data);
+            });
+    }
+    $(function() {
+        getUserProjects();
+    })
+</script>
 
 <main>
     <title>Freelancelot - @user.getDisplayName()</title>
@@ -72,17 +84,6 @@
             @displayVerification("Facebook connected", user.getStatus().getFacebookConnected())
         </table>
     </section>
-    <section>
-        <h2>
-            Last 10 projects
-        </h2>
-        <table>
-            @for(project <- user.getProjects()) {
-                <tr>
-                    <td>@project.getTimeSubmitted()</td>
-                    <td>@project.getTitle()</td>
-                </tr>
-            }
-        </table>
-    </section>
+    <div id="user_projects"></div>
+
 </main>

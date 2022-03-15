@@ -10,8 +10,6 @@ import java.util.concurrent.CompletionStage;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static helpers.JsonUtil.parseResultJsonNode;
-
 /**
  * Service layer class for processing stats
  * @author Bowen Cheng

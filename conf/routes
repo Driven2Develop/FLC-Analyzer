@@ -7,10 +7,9 @@ GET        /                                 controllers.HomeController.index
 GET        /project/:searchTerms             controllers.HomeController.searchLatestTenProjects(searchTerms: String)
 GET        /project/job/:jobId               controllers.HomeController.findProjectsByJobId(jobId: Long)
 GET        /stats/global/:searchTerms        controllers.HomeController.getGlobalStats(searchTerms: String)
-GET        /stats/single/:projectDesc            controllers.HomeController.getProjectStats(projectDesc: String)
-
-# User controller
-GET        /user/:userId                     controllers.UserController.findUserById(userId: Long)
+GET        /stats/single/:projectDesc        controllers.HomeController.getProjectStats(projectDesc: String)
+GET        /user/:userId                     controllers.HomeController.findUserById(userId: Long)
+GET        /user/:userId/projects            controllers.HomeController.findUserProjectsById(userId: Long)
 
 # Map static resources from the /public folder to the /assets URL path
 GET        /assets/*file                     controllers.Assets.versioned(path="/public", file: Asset)
