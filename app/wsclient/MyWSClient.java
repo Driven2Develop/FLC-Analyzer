@@ -14,7 +14,7 @@ import java.util.concurrent.CompletionStage;
 import static helpers.JsonUtil.parseResultJsonNode;
 
 /**
- * Wrapper class for WSClient, providing methods to call Freelancer API asynchronously through http protocol<br/>
+ * Wrapper class for <code>WSClient</code>, providing methods to call Freelancer API asynchronously through http protocol
  *
  * @author Mengqi Liu
  */
@@ -25,6 +25,9 @@ public class MyWSClient implements WSBodyReadables, WSBodyWritables {
     private static final String FREELANCER_SANDBOX_URL = "https://www.freelancer-sandbox.com/api";
     private static final String OAUTH_ACCESS_TOKEN = "JN7EzdE5iivghNOYapxJqjvKr8iEHP";
     private static final String OAUTH_HEADER_NAME = "freelancer-oauth-v1";
+    private static final String JSON_FIELD_RESULT = "result";
+    private static final String JSON_FIELD_STATUS = "status";
+    private static final String JSON_FIELD_SUCCESS = "success";
 
     /**
      * Constructor for DI
@@ -37,7 +40,7 @@ public class MyWSClient implements WSBodyReadables, WSBodyWritables {
     }
 
     /**
-     * initialize WSRequest object from WSClient with the target url as well as oauth access token for Freelancer website.
+     * initialize <code>WSRequest</code> object from <code>WSClient</code> with the target url as well as oauth access token for Freelancer website.
      *
      * @param apiUrl the API url defined by Freelancer API documentation
      * @return a wrapped WSClient instance with callable request
@@ -49,6 +52,7 @@ public class MyWSClient implements WSBodyReadables, WSBodyWritables {
         return this;
     }
 
+    @Deprecated
     private void checkResponse(JsonNode responseJsonNode) throws Exception {
         String status = responseJsonNode.findValue("status").textValue();
         if (!"success".equalsIgnoreCase(status)) {
@@ -56,16 +60,11 @@ public class MyWSClient implements WSBodyReadables, WSBodyWritables {
         }
     }
 
-    /**
-     * call Freelancer API by http GET method
-     *
-     * @return the json format result returned from Freelancer API
-     * @author Mengqi Liu
-     */
+    @Deprecated
     public JsonNode get() throws Exception {
         JsonNode responseJsonNode = this.request.get().thenApply(r -> r.getBody(json())).toCompletableFuture().get();
         checkResponse(responseJsonNode);
-        return responseJsonNode.findValue("result");
+        return responseJsonNode.findValue(JSON_FIELD_RESULT);
     }
 
     /**
@@ -78,10 +77,10 @@ public class MyWSClient implements WSBodyReadables, WSBodyWritables {
         return this.request.get()
                 .thenApplyAsync(r -> {
                     JsonNode responseJsonNode = r.getBody(json());
-                    String status = responseJsonNode.findValue("status").textValue();
-                    if ("success".equalsIgnoreCase(status)) {
+                    String status = responseJsonNode.findValue(JSON_FIELD_STATUS).textValue();
+                    if (JSON_FIELD_SUCCESS.equalsIgnoreCase(status)) {
                         try {
-                            return parseResultJsonNode(responseJsonNode.findValue("result"), classType, jsonNodeField);
+                            return parseResultJsonNode(responseJsonNode.findValue(JSON_FIELD_RESULT), classType, jsonNodeField);
                         } catch (JsonProcessingException e) {
 
                         }
