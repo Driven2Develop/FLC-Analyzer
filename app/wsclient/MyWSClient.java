@@ -39,6 +39,14 @@ public class MyWSClient implements WSBodyReadables, WSBodyWritables {
         this.ws = ws;
     }
 
+    public WSRequest getRequest() {
+        return request;
+    }
+
+    public void setRequest(WSRequest request) {
+        this.request = request;
+    }
+
     /**
      * initialize <code>WSRequest</code> object from <code>WSClient</code> with the target url as well as oauth access token for Freelancer website.
      *

@@ -9,16 +9,22 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import wsclient.MyWSClient;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionStage;
 
 import static helpers.DateUtil.parseDate;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static services.TestData.DEFAULT_PROJECT_TYPE;
+import static services.TestData.DEFAULT_USER_ID;
+import static services.TestData.FUTURE_PROJECTS;
+import static services.TestData.TEST_JOBS_1;
+import static services.TestData.TEST_JOBS_2;
+import static services.TestData.TEST_SUBMITTIME_1;
+import static services.TestData.TEST_SUBMITTIME_2;
+import static services.TestData.TEST_TITLE_1;
+import static services.TestData.TEST_TITLE_2;
 
 /**
  * Unit tests for class <code>ProjectService</code>
@@ -34,20 +40,8 @@ public class ProjectServiceTest {
     @Mock
     private MyWSClient myWSClient;
 
-    private static final long DEFAULT_USER_ID = 1L;
-    private static final String TEST_TITLE_1 = "Test 1";
-    private static final String TEST_TITLE_2 = "Test 2";
-    private static final List<Job> TEST_JOBS_1 = List.of(new Job(7, "Java"), new Job(8, "JavaScript"));
-    private static final List<Job> TEST_JOBS_2 = List.of(new Job(9, "Java"), new Job(10, "JavaScript"));
-    private static final long TEST_SUBMITTIME_1 = 1647003600L;
-    private static final long TEST_SUBMITTIME_2 = 1646139600L;
     private static final String SEARCH_TERMS_JAVA = "Java";
     private static final long SEARCH_JOB_ID_JAVA = 7L;
-    private static final String DEFAULT_PROJECT_TYPE = "Default Project Type";
-    private static final CompletionStage<List<Project>> FUTURE_PROJECTS = CompletableFuture.completedStage(List.of(
-            buildProject(TEST_TITLE_1, DEFAULT_USER_ID, DEFAULT_PROJECT_TYPE, TEST_JOBS_1, TEST_SUBMITTIME_1),
-            buildProject(TEST_TITLE_2, DEFAULT_USER_ID, DEFAULT_PROJECT_TYPE, TEST_JOBS_2, TEST_SUBMITTIME_2)
-    ));
 
     /**
      * Setup data for tests
@@ -90,21 +84,6 @@ public class ProjectServiceTest {
     public void findProjectsByOwnerId() throws Exception {
         List<Project> projects = projectService.findProjectsByOwnerId(DEFAULT_USER_ID).toCompletableFuture().get();
         validateData(projects);
-    }
-
-    /**
-     * static method to build object <code>Project</code>
-     *
-     * @author Mengqi Liu
-     */
-    private static Project buildProject(String title, long ownerId, String jobType, List<Job> jobs, long time) {
-        Project project = new Project();
-        project.setTitle(title);
-        project.setOwnerId(ownerId);
-        project.setType(jobType);
-        project.setJobs(jobs);
-        project.setTimeSubmitted(time);
-        return project;
     }
 
     /**
