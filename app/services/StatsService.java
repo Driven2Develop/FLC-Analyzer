@@ -12,6 +12,7 @@ import java.util.stream.Stream;
 
 /**
  * Service layer class for processing stats
+ *
  * @author Bowen Cheng
  */
 public class StatsService {

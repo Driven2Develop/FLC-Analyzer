@@ -5,7 +5,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
 import play.libs.ws.*;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
 import static helpers.JsonUtil.parseResultJsonNode;
@@ -47,21 +50,6 @@ public class MyWSClient implements WSBodyReadables, WSBodyWritables {
         this.request = ws.url(FREELANCER_SANDBOX_URL + apiUrl)
                 .addHeader(OAUTH_HEADER_NAME, OAUTH_ACCESS_TOKEN);
         return this;
-    }
-
-    @Deprecated
-    private void checkResponse(JsonNode responseJsonNode) throws Exception {
-        String status = responseJsonNode.findValue("status").textValue();
-        if (!"success".equalsIgnoreCase(status)) {
-            throw new Exception("http error");
-        }
-    }
-
-    @Deprecated
-    public JsonNode get() throws Exception {
-        JsonNode responseJsonNode = this.request.get().thenApply(r -> r.getBody(json())).toCompletableFuture().get();
-        checkResponse(responseJsonNode);
-        return responseJsonNode.findValue(JSON_FIELD_RESULT);
     }
 
     /**
