@@ -7,6 +7,11 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
+/**
+ * helper class to provide data for other unit tests
+ *
+ * @author Mengqi Liu
+ */
 public class TestData {
 
     public static final long DEFAULT_USER_ID = 1L;
