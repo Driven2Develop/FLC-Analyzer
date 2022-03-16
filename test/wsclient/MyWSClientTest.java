@@ -1,5 +1,6 @@
 package wsclient;
 
+import models.Project;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -15,6 +16,7 @@ import java.util.concurrent.ExecutionException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -55,10 +57,11 @@ public class MyWSClientTest {
      */
     @Test
     public void testGetListResults() {
-        when(wsClient.url(any())).thenReturn(wsRequest);
-        when(wsRequest.addHeader(OAUTH_HEADER_NAME, OAUTH_ACCESS_TOKEN)).thenReturn(wsRequest);
+        lenient().when(wsClient.url(any())).thenReturn(wsRequest);
+        lenient().when(wsRequest.addHeader(OAUTH_HEADER_NAME, OAUTH_ACCESS_TOKEN)).thenReturn(wsRequest);
         myWSClient.setRequest(wsRequest);
         CompletionStage<WSResponse> futureWSResponse = CompletableFuture.completedStage(wsResponse);
         when(wsRequest.get()).thenReturn(futureWSResponse);
+        assertThat(myWSClient.getListResults(Project.class, "project")).isNotNull();
     }
 }
