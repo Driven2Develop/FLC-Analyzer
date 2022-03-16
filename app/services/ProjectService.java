@@ -7,7 +7,6 @@ import wsclient.MyWSClient;
 import java.util.List;
 import java.util.concurrent.CompletionStage;
 
-import static helpers.JsonUtil.parseResultJsonNode;
 
 /**
  * Service layer class for processing projects

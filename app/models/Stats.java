@@ -16,9 +16,6 @@ public class Stats {
     private String word;
     private int occurrence;
 
-    public Stats() {
-    }
-
     public Stats(String word, int occurrence) {
         this.word = word;
         this.occurrence = occurrence;
@@ -28,16 +25,8 @@ public class Stats {
         return word;
     }
 
-    public void setWord(String word) {
-        this.word = word;
-    }
-
     public int getOccurrence() {
         return occurrence;
-    }
-
-    public void setOccurrence(int occurrence) {
-        this.occurrence = occurrence;
     }
 
 }
