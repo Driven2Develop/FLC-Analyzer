@@ -25,7 +25,6 @@ public class User {
     private Location location;
     private Status status;
     private String primaryLanguage;
-    private boolean isProfileVisible;
     private List<Project> projects;
 
     public long getId() {
@@ -98,14 +97,6 @@ public class User {
 
     public void setPrimaryLanguage(String primaryLanguage) {
         this.primaryLanguage = primaryLanguage;
-    }
-
-    public boolean isProfileVisible() {
-        return isProfileVisible;
-    }
-
-    public void setProfileVisible(boolean profileVisible) {
-        isProfileVisible = profileVisible;
     }
 
     public List<Project> getProjects() {
