@@ -10,6 +10,7 @@ import play.libs.ws.WSClient;
 import play.libs.ws.WSRequest;
 import play.libs.ws.WSResponse;
 
+import java.util.HashMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutionException;
@@ -37,7 +38,7 @@ public class MyWSClientTest {
     private static final String OAUTH_ACCESS_TOKEN = "any oauth access token";
     private static final String OAUTH_HEADER_NAME = "oauth header name";
 
-    private static final String JSON_FIELD_PROJECTS = "projects";
+    private static final String JSON_FIELD_PROJECTS = "project";
 
     /**
      * test <code>initRequest</code> method of class <code>MyWSClient</code>
@@ -62,6 +63,21 @@ public class MyWSClientTest {
         myWSClient.setRequest(wsRequest);
         CompletionStage<WSResponse> futureWSResponse = CompletableFuture.completedStage(wsResponse);
         when(wsRequest.get()).thenReturn(futureWSResponse);
-        assertThat(myWSClient.getListResults(Project.class, "project")).isNotNull();
+        assertThat(myWSClient.getListResults(new HashMap<>(), "cacheKey", Project.class, JSON_FIELD_PROJECTS)).isNotNull();
+    }
+
+    /**
+     * test <code>getResults</code> method of class <code>MyWSClient</code>
+     *
+     * @author Yvonne Lee
+     */
+    @Test
+    public void testGetResults() {
+        lenient().when(wsClient.url(any())).thenReturn(wsRequest);
+        lenient().when(wsRequest.addHeader(OAUTH_HEADER_NAME, OAUTH_ACCESS_TOKEN)).thenReturn(wsRequest);
+        myWSClient.setRequest(wsRequest);
+        CompletionStage<WSResponse> futureWSResponse = CompletableFuture.completedStage(wsResponse);
+        when(wsRequest.get()).thenReturn(futureWSResponse);
+        assertThat(myWSClient.getResults(new HashMap<>(), "cacheKey", Project.class)).isNotNull();
     }
 }

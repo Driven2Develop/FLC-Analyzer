@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import wsclient.MyWSClient;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
@@ -34,6 +35,7 @@ public class StatsServiceTest {
     private MyWSClient myWSClient;
 
 
+    private static final String SEARCH_TERM = "project";
     private static final String PROJECT_DESC_A = "This is a description of project A";
     private static final String PROJECT_DESC_B = "This is a description of project B";
 
@@ -45,7 +47,7 @@ public class StatsServiceTest {
     @Before
     public void setup() {
         when(myWSClient.initRequest(any())).thenReturn(myWSClient);
-        when(myWSClient.getListResults(Project.class, "projects")).thenReturn(TEST_PROJECTS);
+        when(myWSClient.getListResults(new HashMap<>(), SEARCH_TERM, Project.class, "projects")).thenReturn(TEST_PROJECTS);
     }
 
     @Test

@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import models.User;
 import wsclient.MyWSClient;
 
+import java.util.HashMap;
 import java.util.concurrent.CompletionStage;
 
 /**
@@ -16,6 +17,8 @@ public class UserService {
     private MyWSClient myWSClient;
 
     private static String USER_SEARCH_URL = "/users/0.1/users/";
+
+    private HashMap<Long, CompletionStage<User>> userByUserIdCache = new HashMap<>();
 
     /**
      * Constructor for DI
@@ -36,7 +39,7 @@ public class UserService {
      * @author Yvonne Lee
      */
     public CompletionStage<User> findUserById(long userId) {
-        return this.myWSClient.initRequest(USER_SEARCH_URL + "/" + userId).getResults(User.class);
+        return this.myWSClient.initRequest(USER_SEARCH_URL + "/" + userId).getResults(userByUserIdCache, userId, User.class);
     }
 
 }

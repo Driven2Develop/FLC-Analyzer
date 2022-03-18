@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import models.Project;
 import wsclient.MyWSClient;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CompletionStage;
 
@@ -19,6 +20,10 @@ public class ProjectService {
     private MyWSClient myWSClient;
     private static final String PROJECT_SEARCH_URL = "/projects/0.1/projects/all/?offset=0&limit=10&sort_field=time_submitted&job_details=true";
     private static final String PROJECT_LIST_URL = "/projects/0.1/projects?limit=10";
+
+    private HashMap<Long, CompletionStage<List<Project>>> projectsByOwnerIdCache = new HashMap<>();
+    private HashMap<String, CompletionStage<List<Project>>> searchProjectsCache = new HashMap<>();
+    private HashMap<Long, CompletionStage<List<Project>>> projectsByJobIdCache = new HashMap<>();
 
     /**
      * Constructor for DI
@@ -40,7 +45,7 @@ public class ProjectService {
      */
     public CompletionStage<List<Project>> searchLatestTenProjects(String searchTerms) {
         return this.myWSClient.initRequest(PROJECT_SEARCH_URL + "&query=" + searchTerms.trim().replace(" ", "%20"))
-                .getListResults(Project.class, "projects");
+                .getListResults(searchProjectsCache, searchTerms, Project.class, "projects");
     }
 
     /**
@@ -52,7 +57,8 @@ public class ProjectService {
      * @author Mengqi Liu
      */
     public CompletionStage<List<Project>> findProjectsByJobId(long jobId) {
-        return this.myWSClient.initRequest(PROJECT_SEARCH_URL + "&jobs[]=" + jobId).getListResults(Project.class, "projects");
+        return this.myWSClient.initRequest(PROJECT_SEARCH_URL + "&jobs[]=" + jobId)
+                .getListResults(projectsByJobIdCache, jobId, Project.class, "projects");
     }
 
     /**
@@ -64,6 +70,8 @@ public class ProjectService {
      * @author Yvonne Lee
      */
     public CompletionStage<List<Project>> findProjectsByOwnerId(long ownerId) {
-        return this.myWSClient.initRequest(PROJECT_LIST_URL + "&owners[]=" + ownerId).getListResults(Project.class, "projects");
+        return this.myWSClient.initRequest(PROJECT_LIST_URL + "&owners[]=" + ownerId)
+                .getListResults(projectsByOwnerIdCache, ownerId, Project.class, "projects");
     }
+
 }
