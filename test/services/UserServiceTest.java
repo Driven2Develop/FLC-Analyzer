@@ -11,6 +11,7 @@ import wsclient.MyWSClient;
 
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
@@ -67,7 +68,7 @@ public class UserServiceTest {
     @Before
     public void setup() {
         when(myWSClient.initRequest(any())).thenReturn(myWSClient);
-        when(myWSClient.getResults(User.class)).thenReturn(DEFAULT_USER);
+        when(myWSClient.getResults(new HashMap<>(), DEFAULT_USER_ID, User.class)).thenReturn(DEFAULT_USER);
     }
 
     /**

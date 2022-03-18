@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import wsclient.MyWSClient;
 
+import java.util.HashMap;
 import java.util.List;
 
 import static helpers.DateUtil.parseDate;
@@ -60,6 +61,7 @@ public class ProjectServiceTest {
      */
     @Test
     public void testSearchLatestTenProjects() throws Exception {
+        when(myWSClient.getListResults(new HashMap(), SEARCH_TERMS_JAVA, Project.class, "projects")).thenReturn(FUTURE_PROJECTS);
         List<Project> projects = projectService.searchLatestTenProjects(SEARCH_TERMS_JAVA).toCompletableFuture().get();
         validateData(projects);
     }
@@ -71,6 +73,7 @@ public class ProjectServiceTest {
      */
     @Test
     public void testFindProjectsByJobId() throws Exception {
+        when(myWSClient.getListResults(new HashMap(), SEARCH_JOB_ID_JAVA, Project.class, "projects")).thenReturn(FUTURE_PROJECTS);
         List<Project> projects = projectService.findProjectsByJobId(SEARCH_JOB_ID_JAVA).toCompletableFuture().get();
         validateData(projects);
     }
@@ -82,6 +85,7 @@ public class ProjectServiceTest {
      */
     @Test
     public void findProjectsByOwnerId() throws Exception {
+        when(myWSClient.getListResults(new HashMap(), DEFAULT_USER_ID, Project.class, "projects")).thenReturn(FUTURE_PROJECTS);
         List<Project> projects = projectService.findProjectsByOwnerId(DEFAULT_USER_ID).toCompletableFuture().get();
         validateData(projects);
     }
@@ -93,7 +97,6 @@ public class ProjectServiceTest {
      */
     private void prepareData() {
         when(myWSClient.initRequest(any())).thenReturn(myWSClient);
-        when(myWSClient.getListResults(Project.class, "projects")).thenReturn(FUTURE_PROJECTS);
     }
 
     /**

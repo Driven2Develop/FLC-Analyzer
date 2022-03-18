@@ -5,10 +5,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
 import play.libs.ws.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
 import static helpers.JsonUtil.parseResultJsonNode;
@@ -19,7 +17,6 @@ import static helpers.JsonUtil.parseResultJsonNode;
  * @author Mengqi Liu
  */
 public class MyWSClient implements WSBodyReadables, WSBodyWritables {
-
     private final WSClient ws;
     private WSRequest request;
     private static final String FREELANCER_SANDBOX_URL = "https://www.freelancer-sandbox.com/api";
@@ -66,8 +63,11 @@ public class MyWSClient implements WSBodyReadables, WSBodyWritables {
      * @return the json format result returned from Freelancer API
      * @author Mengqi Liu
      */
-    public <T> CompletionStage<List<T>> getListResults(Class<T> classType, String jsonNodeField) {
-        return this.request.get()
+    public <U, T> CompletionStage<List<T>> getListResults(HashMap<U, CompletionStage<List<T>>> cache, U key, Class<T> classType, String jsonNodeField) {
+        if(cache.containsKey(key)) {
+            return cache.get(key);
+        }
+        CompletionStage<List<T>> results = this.request.get()
                 .thenApplyAsync(r -> {
                     JsonNode responseJsonNode = getResponseNode(r);
                     if (isResponseSuccess(responseJsonNode)) {
@@ -79,6 +79,9 @@ public class MyWSClient implements WSBodyReadables, WSBodyWritables {
                     }
                     return null;
                 });
+        cache.put(key, results);
+        return results;
+
     }
 
     /**
@@ -87,8 +90,11 @@ public class MyWSClient implements WSBodyReadables, WSBodyWritables {
      * @return the json format result returned from Freelancer API
      * @author Yvonne Lee
      */
-    public <T> CompletionStage<T> getResults(Class<T> classType) {
-        return this.request.get()
+    public <U, T> CompletionStage<T> getResults(HashMap<U, CompletionStage<T>> cache, U key, Class<T> classType) {
+        if(cache.containsKey(key)) {
+            return cache.get(key);
+        }
+        CompletionStage<T> results = this.request.get()
                 .thenApplyAsync(r -> {
                     JsonNode responseJsonNode = getResponseNode(r);
                     if (isResponseSuccess(responseJsonNode)) {
@@ -100,6 +106,8 @@ public class MyWSClient implements WSBodyReadables, WSBodyWritables {
                     }
                     return null;
                 });
+        cache.put(key, results);
+        return results;
     }
 
     /**

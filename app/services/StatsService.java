@@ -31,6 +31,8 @@ public class StatsService {
         this.myWSClient = myWSClient;
     }
 
+    private HashMap<String, CompletionStage<List<Project>>> globalStatsCache = new HashMap<>();
+
     /**
      * Get global word status for top 250 projects based on description preview text<br>
      * Implemented using Stream API
@@ -42,7 +44,7 @@ public class StatsService {
     public CompletionStage<List<Stats>> getGlobalStats(String searchTerms) {
         CompletionStage<List<Project>> results = this.myWSClient
                 .initRequest(PROJECT_SEARCH_URL + "&query=" + searchTerms.trim().replace(" ", "%20"))
-                .getListResults(Project.class, "projects");
+                .getListResults(globalStatsCache, searchTerms, Project.class, "projects");
 
         return results.thenApplyAsync(
                 projects -> {
