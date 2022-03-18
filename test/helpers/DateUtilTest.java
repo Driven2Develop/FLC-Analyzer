@@ -15,6 +15,6 @@ public class DateUtilTest {
 
     @Test
     public void formatDateStringTest() {
-        assertEquals("Mar. 01 2022", DateUtil.formatDateString(LocalDate.of(2022, 3, 1)));
+        assertEquals("01/03/2022", DateUtil.formatDateString(LocalDate.of(2022, 3, 1)));
     }
 }
