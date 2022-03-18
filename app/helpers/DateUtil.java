@@ -13,7 +13,7 @@ import java.time.format.DateTimeFormatter;
  */
 public class DateUtil {
 
-    public static String DATE_FORMAT = "MMM dd yyyy";
+    public static String DATE_FORMAT = "dd/MM/yyyy";
 
     /**
      * Util method to parse epoch timestamp to LocalDate
