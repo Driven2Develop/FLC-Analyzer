@@ -1,26 +1,24 @@
 package models;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 /**
- * POJO class for user statuses
+ * POJO class for currency
  *
  * @author Yvonne Lee
  */
-@JsonIgnoreProperties(ignoreUnknown=true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class Status {
-    private Boolean emailVerified;
+public class Currency {
+    private String name;
 
-    public Boolean getEmailVerified() {
-        return emailVerified;
+    public String getName() {
+        return name;
     }
 
-    public void setEmailVerified(Boolean emailVerified) {
-        this.emailVerified = emailVerified;
+    public void setName(String name) {
+        this.name = name;
     }
-
 }

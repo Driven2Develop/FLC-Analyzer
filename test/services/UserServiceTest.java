@@ -38,25 +38,16 @@ public class UserServiceTest {
 
     private static long DEFAULT_USER_ID = 1L;
     private static String DEFAULT_USERNAME = "john_doe";
-    private static String DEFAULT_EMAIL = "johndoe@soen.edu";
     private static String DEFAULT_USER_DISPLAY_NAME = "John Doe";
-    private static String DEFAULT_USER_PUBLIC_NAME = "John Doe";
     private static long DEFAULT_REGISTRATION_DATE = 1647003600L;
-    private static List<Project> DEFAULT_PROJECTS = Collections.emptyList();
+    private static String DEFAULT_ROLE = "Owner";
+    private static String DEFAULT_CHOSEN_ROLE = "Owner";
 
-    private static String DEFAULT_CITY = "Montreal";
     private static String DEFAULT_COUNTRY_NAME = "Canada";
-    private static String DEFAULT_LANGUAGE = "en";
+    private static String DEFAULT_CURRENCY_NAME = "US Dollar";
 
-    private static boolean DEFAULT_FREELANCER_VERIFIED_USER = true;
     private static boolean DEFAULT_EMAIL_VERIFIED = true;
-    private static boolean DEFAULT_PAYMENT_VERIFIED = false;
-    private static boolean DEFAULT_DEPOSIT_MADE = false;
-    private static boolean DEFAULT_PROFILE_COMPLETE = false;
-    private static boolean DEFAULT_PHONE_VERIFIED = false;
-    private static boolean DEFAULT_IDENTITY_VERIFIED = false;
-    private static boolean DEFAULT_FACEBOOK_CONNECTED = false;
-    private static boolean DEFAULT_LINKEDIN_CONNECTED = false;
+    private static boolean DEFAULT_LIMITED_ACCOUNT = false;
 
     private static final CompletionStage<User> DEFAULT_USER = CompletableFuture.completedStage(buildDefaultUser());
 
@@ -94,29 +85,21 @@ public class UserServiceTest {
         assertNotNull(user);
         assertEquals(DEFAULT_USER_ID, user.getId());
         assertEquals(DEFAULT_USER_DISPLAY_NAME, user.getDisplayName());
-        assertEquals(DEFAULT_EMAIL, user.getEmail());
-        assertEquals(DEFAULT_LANGUAGE, user.getPrimaryLanguage());
-        assertEquals(DEFAULT_USER_PUBLIC_NAME, user.getPublicName());
         assertEquals(DEFAULT_USERNAME, user.getUsername());
         assertEquals(parseDate(DEFAULT_REGISTRATION_DATE), user.getRegistrationDate());
-        assertEquals(DEFAULT_PROJECTS, user.getProjects());
+        assertEquals(DEFAULT_LIMITED_ACCOUNT, user.isLimitedAccount());
+        assertEquals(DEFAULT_ROLE, user.getRole());
+        assertEquals(DEFAULT_CHOSEN_ROLE, user.getChosenRole());
 
         assertNotNull(user.getLocation());
-        assertEquals(DEFAULT_CITY, user.getLocation().getCity());
-
         assertNotNull(user.getLocation().getCountry());
         assertEquals(DEFAULT_COUNTRY_NAME, user.getLocation().getCountry().getName());
 
         assertNotNull(user.getStatus());
-        assertEquals(DEFAULT_FREELANCER_VERIFIED_USER, user.getStatus().getFreelancerVerifiedUser());
         assertEquals(DEFAULT_EMAIL_VERIFIED, user.getStatus().getEmailVerified());
-        assertEquals(DEFAULT_PAYMENT_VERIFIED, user.getStatus().getPaymentVerified());
-        assertEquals(DEFAULT_DEPOSIT_MADE, user.getStatus().getDepositMade());
-        assertEquals(DEFAULT_PROFILE_COMPLETE, user.getStatus().getProfileComplete());
-        assertEquals(DEFAULT_PHONE_VERIFIED, user.getStatus().getPhoneVerified());
-        assertEquals(DEFAULT_IDENTITY_VERIFIED, user.getStatus().getIdentityVerified());
-        assertEquals(DEFAULT_FACEBOOK_CONNECTED, user.getStatus().getFacebookConnected());
-        assertEquals(DEFAULT_LINKEDIN_CONNECTED, user.getStatus().getLinkedinConnected());
+
+        assertNotNull(user.getPrimaryCurrency());
+        assertEquals(DEFAULT_CURRENCY_NAME, user.getPrimaryCurrency().getName());
     }
 
     /**
@@ -129,12 +112,12 @@ public class UserServiceTest {
         user.setId(DEFAULT_USER_ID);
         user.setUsername(DEFAULT_USERNAME);
         user.setDisplayName(DEFAULT_USER_DISPLAY_NAME);
-        user.setPublicName(DEFAULT_USER_PUBLIC_NAME);
-        user.setEmail(DEFAULT_EMAIL);
-        user.setPrimaryLanguage(DEFAULT_LANGUAGE);
         user.setRegistrationDate(DEFAULT_REGISTRATION_DATE);
-        user.setProjects(DEFAULT_PROJECTS);
+        user.setRole(DEFAULT_ROLE);
+        user.setChosenRole(DEFAULT_CHOSEN_ROLE);
+        user.setLimitedAccount(DEFAULT_LIMITED_ACCOUNT);
         user.setLocation(buildDefaultLocation());
+        user.setPrimaryCurrency(buildDefaultCurrency());
         user.setStatus(buildDefaultStatus());
 
         return user;
@@ -147,14 +130,25 @@ public class UserServiceTest {
      */
     private static Location buildDefaultLocation() {
         Location defaultLocation = new Location();
-        defaultLocation.setCity(DEFAULT_CITY);
-
         Country defaultCountry = new Country();
+
         defaultCountry.setName(DEFAULT_COUNTRY_NAME);
         defaultLocation.setCountry(defaultCountry);
 
         return defaultLocation;
     }
+
+    /**
+     * static method to build object default <code>Currency</code>
+     *
+     * @author Yvonne Lee
+     */
+    private static Currency buildDefaultCurrency() {
+        Currency defaultCurrency = new Currency();
+        defaultCurrency.setName(DEFAULT_CURRENCY_NAME);
+        return defaultCurrency;
+    }
+
 
     /**
      * static method to build object default <code>Status</code>
@@ -163,15 +157,7 @@ public class UserServiceTest {
      */
     private static Status buildDefaultStatus() {
         Status defaultStatus = new Status();
-        defaultStatus.setFreelancerVerifiedUser(DEFAULT_FREELANCER_VERIFIED_USER);
         defaultStatus.setEmailVerified(DEFAULT_EMAIL_VERIFIED);
-        defaultStatus.setPaymentVerified(DEFAULT_PAYMENT_VERIFIED);
-        defaultStatus.setDepositMade(DEFAULT_DEPOSIT_MADE);
-        defaultStatus.setProfileComplete(DEFAULT_PROFILE_COMPLETE);
-        defaultStatus.setPhoneVerified(DEFAULT_PHONE_VERIFIED);
-        defaultStatus.setIdentityVerified(DEFAULT_IDENTITY_VERIFIED);
-        defaultStatus.setFacebookConnected(DEFAULT_FACEBOOK_CONNECTED);
-        defaultStatus.setLinkedinConnected(DEFAULT_LINKEDIN_CONNECTED);
         return defaultStatus;
     }
 }
