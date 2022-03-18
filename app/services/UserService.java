@@ -16,7 +16,7 @@ public class UserService {
 
     private MyWSClient myWSClient;
 
-    private static String USER_SEARCH_URL = "/users/0.1/users/";
+    private static String USER_SEARCH_URL = "/users/0.1/users/%s?compact=true";
 
     private HashMap<Long, CompletionStage<User>> userByUserIdCache = new HashMap<>();
 
@@ -39,7 +39,7 @@ public class UserService {
      * @author Yvonne Lee
      */
     public CompletionStage<User> findUserById(long userId) {
-        return this.myWSClient.initRequest(USER_SEARCH_URL + "/" + userId).getResults(userByUserIdCache, userId, User.class);
+        return this.myWSClient.initRequest(String.format(USER_SEARCH_URL, userId)).getResults(userByUserIdCache, userId, User.class);
     }
 
 }

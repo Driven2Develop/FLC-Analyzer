@@ -6,26 +6,27 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 import java.time.LocalDate;
-import java.util.List;
 
 import static helpers.DateUtil.parseDate;
 
 /**
  * POJO class for user
+ *
+ * @author Yvonne Lee
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class User {
     private long id;
     private String username;
-    private String email;
     private LocalDate registrationDate;
+    private String role;
+    private String chosenRole;
     private String displayName;
-    private String publicName;
+    private boolean limitedAccount;
     private Location location;
     private Status status;
-    private String primaryLanguage;
-    private List<Project> projects;
+    private Currency primaryCurrency;
 
     public long getId() {
         return id;
@@ -41,14 +42,6 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public LocalDate getRegistrationDate() {
@@ -67,14 +60,6 @@ public class User {
         this.displayName = displayName;
     }
 
-    public String getPublicName() {
-        return publicName;
-    }
-
-    public void setPublicName(String publicName) {
-        this.publicName = publicName;
-    }
-
     public Location getLocation() {
         return location;
     }
@@ -91,19 +76,35 @@ public class User {
         this.status = status;
     }
 
-    public String getPrimaryLanguage() {
-        return primaryLanguage;
+    public boolean isLimitedAccount() {
+        return limitedAccount;
     }
 
-    public void setPrimaryLanguage(String primaryLanguage) {
-        this.primaryLanguage = primaryLanguage;
+    public void setLimitedAccount(boolean limitedAccount) {
+        this.limitedAccount = limitedAccount;
     }
 
-    public List<Project> getProjects() {
-        return projects;
+    public Currency getPrimaryCurrency() {
+        return primaryCurrency;
     }
 
-    public void setProjects(List<Project> projects) {
-        this.projects = projects;
+    public void setPrimaryCurrency(Currency primaryCurrency) {
+        this.primaryCurrency = primaryCurrency;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public String getChosenRole() {
+        return chosenRole;
+    }
+
+    public void setChosenRole(String chosenRole) {
+        this.chosenRole = chosenRole;
     }
 }

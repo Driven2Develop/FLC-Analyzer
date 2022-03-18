@@ -36,52 +36,51 @@
             @user.getDisplayName() (@user.getId())
         </h1>
         <table>
+            @displayVerification("Limited account", user.isLimitedAccount())
+            @displayVerification("Email verified", user.getStatus().getEmailVerified())
             <tr>
-                <td>Email:</td>
-                <td>
-                    @if(user.getEmail() == null || user.getEmail().isEmpty) {
-                        -
-                    } else {
-                        @user.getEmail()
-                    }
-                </td>
+                <td>Name:</td>
+                <td>@user.getDisplayName()</td>
             </tr>
             <tr>
-                <td>Language:</td>
-                <td>@user.getPrimaryLanguage()</td>
-            </tr>
-            <tr>
-                <td>Location:</td>
-                <td>
-                    @if(user.getLocation() != null && user.getLocation().getCity() != null) {
-                        @user.getLocation().getCity(), @user.getLocation().getCountry().getName()
-                    } else if(user.getLocation() != null && user.getLocation().getCity() == null) {
-                        @user.getLocation().getCountry().getName()
-                    } else {
-                        -
-                    }
-                <td>
+                <td>Username:</td>
+                <td>@user.getUsername()</td>
             </tr>
             <tr>
                 <td>Joined date:</td>
                 <td>@DateUtil.formatDateString(user.getRegistrationDate())</td>
             </tr>
-        </table>
-    </section>
-    <section>
-        <h2>
-            Verification
-        </h2>
-        <table>
-            @displayVerification("Freelancer verified user", user.getStatus().getFreelancerVerifiedUser())
-            @displayVerification("Identity verified", user.getStatus().getIdentityVerified())
-            @displayVerification("Payment verified", user.getStatus().getPaymentVerified())
-            @displayVerification("Email verified", user.getStatus().getEmailVerified())
-            @displayVerification("Deposit made", user.getStatus().getDepositMade())
-            @displayVerification("Profile completed", user.getStatus().getProfileComplete())
-            @displayVerification("Phone verified", user.getStatus().getPhoneVerified())
-            @displayVerification("LinkedIn connected", user.getStatus().getLinkedinConnected())
-            @displayVerification("Facebook connected", user.getStatus().getFacebookConnected())
+            <tr>
+                <td>Country:</td>
+                <td>
+                @if(user.getLocation() != null
+                        && user.getLocation().getCountry() != null
+                        && user.getLocation().getCountry().getName() != null) {
+                    @user.getLocation().getCountry().getName()
+                } else {
+                    -
+                }
+                <td>
+            </tr>
+            <tr>
+                <td>Primary Currency:</td>
+                <td>
+                @if(user.getPrimaryCurrency() != null
+                        && user.getPrimaryCurrency().getName() != null) {
+                    @user.getPrimaryCurrency().getName()
+                } else {
+                    -
+                }
+                <td>
+            </tr>
+            <tr>
+                <td>Role:</td>
+                <td>@user.getRole()<td>
+            </tr>
+            <tr>
+                <td>Chosen role:</td>
+                <td>@user.getChosenRole()<td>
+            </tr>
         </table>
     </section>
     <div id="user_projects"></div>
