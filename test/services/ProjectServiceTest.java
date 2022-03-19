@@ -113,5 +113,9 @@ public class ProjectServiceTest {
                         tuple(TEST_TITLE_1, DEFAULT_USER_ID, DEFAULT_PROJECT_TYPE, TEST_JOBS_1, parseDate(TEST_SUBMITTIME_1)),
                         tuple(TEST_TITLE_2, DEFAULT_USER_ID, DEFAULT_PROJECT_TYPE, TEST_JOBS_2, parseDate(TEST_SUBMITTIME_2))
                 );
+        List<Long> jobIdList = List.of(7L, 8L, 9L, 10L);
+        assertThat(projects).extracting(Project::getJobs).anyMatch(jobs -> jobs.stream().filter(job -> jobIdList.contains(job.getId())).findAny().isPresent());
+        List<String> jobNameList = List.of("Java", "JavaScript");
+        assertThat(projects).extracting(Project::getJobs).anyMatch(jobs -> jobs.stream().filter(job -> jobNameList.contains(job.getName())).findAny().isPresent());
     }
 }

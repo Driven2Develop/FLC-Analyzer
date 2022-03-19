@@ -17,8 +17,8 @@ public class TestData {
     public static final long DEFAULT_USER_ID = 1L;
     public static final String TEST_TITLE_1 = "Test 1";
     public static final String TEST_TITLE_2 = "Test 2";
-    public static final List<Job> TEST_JOBS_1 = List.of(new Job(7, "Java"), new Job(8, "JavaScript"));
-    public static final List<Job> TEST_JOBS_2 = List.of(new Job(9, "Java"), new Job(10, "JavaScript"));
+    public static final List<Job> TEST_JOBS_1 = List.of(new Job(7, "Java"), buildJob(8, "JavaScript"));
+    public static final List<Job> TEST_JOBS_2 = List.of(new Job(9, "Java"), buildJob(10, "JavaScript"));
     public static final long TEST_SUBMITTIME_1 = 1647003600L;
     public static final long TEST_SUBMITTIME_2 = 1646139600L;
     public static final String DEFAULT_PROJECT_TYPE = "Default Project Type";
@@ -40,5 +40,12 @@ public class TestData {
         project.setJobs(jobs);
         project.setTimeSubmitted(time);
         return project;
+    }
+
+    public static Job buildJob(long id, String name) {
+        Job job = new Job();
+        job.setId(id);
+        job.setName(name);
+        return job;
     }
 }
