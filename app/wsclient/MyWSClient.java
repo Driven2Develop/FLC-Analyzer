@@ -36,10 +36,6 @@ public class MyWSClient implements WSBodyReadables, WSBodyWritables {
         this.ws = ws;
     }
 
-    public WSRequest getRequest() {
-        return request;
-    }
-
     public void setRequest(WSRequest request) {
         this.request = request;
     }

@@ -3,8 +3,6 @@ package models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -73,33 +71,5 @@ public class Project {
 
     public void setPreviewDescription(String previewDescription) {
         this.previewDescription = previewDescription;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Project project = (Project) o;
-
-        return new EqualsBuilder().append(ownerId, project.ownerId).append(timeSubmitted, project.timeSubmitted).append(title, project.title).append(type, project.type).append(jobs, project.jobs).append(previewDescription, project.previewDescription).isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37).append(ownerId).append(timeSubmitted).append(title).append(type).append(jobs).append(previewDescription).toHashCode();
-    }
-
-    @Override
-    public String toString() {
-        return "Project{" +
-                "ownerId=" + ownerId +
-                ", timeSubmitted=" + timeSubmitted +
-                ", title='" + title + '\'' +
-                ", type='" + type + '\'' +
-                ", jobs=" + jobs +
-                ", previewDescription='" + previewDescription + '\'' +
-                '}';
     }
 }
