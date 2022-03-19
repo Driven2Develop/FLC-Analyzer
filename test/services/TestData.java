@@ -22,10 +22,9 @@ public class TestData {
     public static final long TEST_SUBMITTIME_1 = 1647003600L;
     public static final long TEST_SUBMITTIME_2 = 1646139600L;
     public static final String DEFAULT_PROJECT_TYPE = "Default Project Type";
-    public static final CompletionStage<List<Project>> FUTURE_PROJECTS = CompletableFuture.completedStage(List.of(
-            buildProject(TEST_TITLE_1, DEFAULT_USER_ID, DEFAULT_PROJECT_TYPE, TEST_JOBS_1, TEST_SUBMITTIME_1),
-            buildProject(TEST_TITLE_2, DEFAULT_USER_ID, DEFAULT_PROJECT_TYPE, TEST_JOBS_2, TEST_SUBMITTIME_2)
-    ));
+    public static final Project TEST_PROJECT_1 = buildProject(TEST_TITLE_1, DEFAULT_USER_ID, DEFAULT_PROJECT_TYPE, TEST_JOBS_1, TEST_SUBMITTIME_1);
+    public static final Project TEST_PROJECT_2 = buildProject(TEST_TITLE_2, DEFAULT_USER_ID, DEFAULT_PROJECT_TYPE, TEST_JOBS_2, TEST_SUBMITTIME_2);
+    public static final CompletionStage<List<Project>> FUTURE_PROJECTS = CompletableFuture.completedStage(List.of(TEST_PROJECT_1, TEST_PROJECT_2));
 
     /**
      * static method to build object <code>Project</code>

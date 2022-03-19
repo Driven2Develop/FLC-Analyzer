@@ -65,8 +65,9 @@ public class MyWSClient implements WSBodyReadables, WSBodyWritables {
         }
         CompletionStage<List<T>> results = this.request.get()
                 .thenApplyAsync(r -> {
-                    JsonNode responseJsonNode = getResponseNode(r);
-                    if (isResponseSuccess(responseJsonNode)) {
+                    JsonNode responseJsonNode = r.getBody(json());
+                    String status = responseJsonNode.findValue(JSON_FIELD_STATUS).textValue();
+                    if (JSON_FIELD_SUCCESS.equalsIgnoreCase(status)) {
                         try {
                             return parseResultJsonNode(responseJsonNode.findValue(JSON_FIELD_RESULT), classType, jsonNodeField);
                         } catch (JsonProcessingException e) {
@@ -92,10 +93,11 @@ public class MyWSClient implements WSBodyReadables, WSBodyWritables {
         }
         CompletionStage<T> results = this.request.get()
                 .thenApplyAsync(r -> {
-                    JsonNode responseJsonNode = getResponseNode(r);
-                    if (isResponseSuccess(responseJsonNode)) {
+                    JsonNode responseJsonNode = r.getBody(json());
+                    String status = responseJsonNode.findValue(JSON_FIELD_STATUS).textValue();
+                    if (JSON_FIELD_SUCCESS.equalsIgnoreCase(status)) {
                         try {
-                            return parseResultJsonNode(getResponseValue(responseJsonNode), classType);
+                            return parseResultJsonNode(responseJsonNode.findValue(JSON_FIELD_RESULT), classType);
                         } catch (JsonProcessingException e) {
                             return null;
                         }
@@ -104,39 +106,5 @@ public class MyWSClient implements WSBodyReadables, WSBodyWritables {
                 });
         cache.put(key, results);
         return results;
-    }
-
-    /**
-     * Get response JSON node
-     *
-     * @param response WS response from the server
-     * @return Entire response value
-     *
-     * @author Yvonne Lee
-     */
-    private JsonNode getResponseNode(WSResponse response) {
-        return response.getBody(json());
-    }
-
-    /**
-     * Check if response is success / not
-     * @param responseJsonNode Response value in JsonNode
-     * @return true: response is successful
-     *
-     * @author Yvonne Lee
-     */
-    private boolean isResponseSuccess(JsonNode responseJsonNode) {
-        String status = responseJsonNode.findValue(JSON_FIELD_STATUS).textValue();
-        return JSON_FIELD_SUCCESS.equalsIgnoreCase(status);
-    }
-
-    /**
-     * Get response body from <code>result</code> field
-     *
-     * @param responseJsonNode
-     * @return Response body in JsonNode
-     */
-    private JsonNode getResponseValue(JsonNode responseJsonNode) {
-        return responseJsonNode.findValue(JSON_FIELD_RESULT);
     }
 }

@@ -1,5 +1,6 @@
 package wsclient;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import models.Project;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,17 +10,25 @@ import org.mockito.junit.MockitoJUnitRunner;
 import play.libs.ws.WSClient;
 import play.libs.ws.WSRequest;
 import play.libs.ws.WSResponse;
+import services.TestData;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-import java.util.concurrent.ExecutionException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
+import static services.TestData.TEST_PROJECT_1;
 
+/**
+ * Unit tests for class <code>MyWSClient</code>
+ *
+ * @author Mengqi Liu
+ * @author Yvonne Lee
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class MyWSClientTest {
 
@@ -64,6 +73,11 @@ public class MyWSClientTest {
         CompletionStage<WSResponse> futureWSResponse = CompletableFuture.completedStage(wsResponse);
         when(wsRequest.get()).thenReturn(futureWSResponse);
         assertThat(myWSClient.getListResults(new HashMap<>(), "cacheKey", Project.class, JSON_FIELD_PROJECTS)).isNotNull();
+        assertThat(myWSClient.getListResults(new HashMap<>() {
+            {
+                put(TEST_PROJECT_1, CompletableFuture.completedStage(List.of()));
+            }
+        }, TEST_PROJECT_1, Project.class, JSON_FIELD_PROJECTS)).isNotNull();
     }
 
     /**
@@ -79,5 +93,12 @@ public class MyWSClientTest {
         CompletionStage<WSResponse> futureWSResponse = CompletableFuture.completedStage(wsResponse);
         when(wsRequest.get()).thenReturn(futureWSResponse);
         assertThat(myWSClient.getResults(new HashMap<>(), "cacheKey", Project.class)).isNotNull();
+        assertThat(myWSClient.getResults(new HashMap<>() {
+            {
+                put(TEST_PROJECT_1, CompletableFuture.completedStage(TEST_PROJECT_1));
+            }
+        }, TEST_PROJECT_1, Project.class)).isNotNull();
     }
+
+
 }
