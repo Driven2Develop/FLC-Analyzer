@@ -8,6 +8,8 @@ GET        /project/:searchTerms             controllers.HomeController.searchLa
 GET        /project/job/:jobId               controllers.HomeController.findProjectsByJobId(jobId: Long)
 GET        /stats/global/:searchTerms        controllers.HomeController.getGlobalStats(searchTerms: String)
 GET        /stats/single/:projectDesc        controllers.HomeController.getProjectStats(projectDesc: String)
+GET        /project/readability/:projectDesc controllers.HomeController.computeProjectReadability(projectDesc: String)
+GET        /project/readability/average/:searchTerms controllers.HomeController.computeProjectReadability(searchTerms: String)
 GET        /user/:userId                     controllers.HomeController.findUserById(userId: Long)
 GET        /user/:userId/projects            controllers.HomeController.findUserProjectsById(userId: Long)
 

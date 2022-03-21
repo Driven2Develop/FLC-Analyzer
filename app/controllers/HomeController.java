@@ -3,6 +3,7 @@ package controllers;
 import com.google.inject.Inject;
 import models.Project;
 import models.User;
+import models.Readability;
 import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -103,6 +104,32 @@ public class HomeController extends Controller {
                 .supplyAsync(() -> statsService.getProjectStats(projectDesc))
                 .thenApplyAsync((stats) -> ok(views.html.Stats.render(stats)));
     }
+
+    /**
+     * Gets readability and presents result to view
+     *
+     * @param projectDesc project description to get stats from
+     * @return readability obejct based on project description
+     * @author Iymen Abdella
+     */
+    public CompletionStage<Result> computeProjectReadability(String projectDesc) {
+
+        return CompletableFuture
+                .supplyAsync(() -> projectService.computeProjectReadability(projectDesc))
+                .thenApplyAsync(readability -> ok(views.html.Readability.render(readability)), httpExecutionContext.current());
+    }
+    /**
+     * Gets average Flesch Readability index and presents result to view
+     *
+     * @param searchTerms text being searched
+     * @return list of readability objects averaged out
+     * @author Iymen Abdella
+     */
+//    public CompletionStage<Result> getAverageReadability(String searchTerms) {
+//        return CompletableFuture
+//                .supplyAsync(() -> projectService.getAverageReadability(searchTerms))
+//                .thenApplyAsync(readability -> ok(views.html.Readability.render(readability.join())), httpExecutionContext.current());
+//    }
 
     /**
      * Gets user by ID and presents result to view

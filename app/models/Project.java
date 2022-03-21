@@ -24,6 +24,7 @@ public class Project {
     private String type;
     private List<Job> jobs;
     private String previewDescription;
+    private Readability readability;
 
     public long getOwnerId() {
         return ownerId;
@@ -72,4 +73,9 @@ public class Project {
     public void setPreviewDescription(String previewDescription) {
         this.previewDescription = previewDescription;
     }
+
+    public Readability getReadability() {
+        return readability;
+    }
+    public void setReadability(Readability r){this.readability = r;}
 }
