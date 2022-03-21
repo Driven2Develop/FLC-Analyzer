@@ -2,6 +2,7 @@ package services;
 
 import models.Job;
 import models.Project;
+import models.Readability;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -25,6 +26,9 @@ public class TestData {
     public static final Project TEST_PROJECT_1 = buildProject(TEST_TITLE_1, DEFAULT_USER_ID, DEFAULT_PROJECT_TYPE, TEST_JOBS_1, TEST_SUBMITTIME_1);
     public static final Project TEST_PROJECT_2 = buildProject(TEST_TITLE_2, DEFAULT_USER_ID, DEFAULT_PROJECT_TYPE, TEST_JOBS_2, TEST_SUBMITTIME_2);
     public static final CompletionStage<List<Project>> FUTURE_PROJECTS = CompletableFuture.completedStage(List.of(TEST_PROJECT_1, TEST_PROJECT_2));
+    public static final Readability TEST_READABILITY = new Readability(50);
+    public static final String TEST_PREVIEW_DESCRIPTION = "This is a project description.";
+
 
     /**
      * static method to build object <code>Project</code>

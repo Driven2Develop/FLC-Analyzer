@@ -13,12 +13,12 @@
                 function searchProjectsByTerms() {
                     if (currentSearchCount <= maxSearchCount) {
                         const searchTermsValue = $('#searchTerms').val();
-                        const readability = `<h4>Search terms: ${searchTermsValue} : Flesh Reading Ease Index: ??? . FKGL: ???<h4>`;
+                        const globalReadability = `<h4>Search terms: ${searchTermsValue}</h4><h4><a href="/project/readability/average/${searchTermsValue}">Average Flesch Reading Ease Index</a><h4>`;
                         const globalStats = `<p><a href="/stats/global/${searchTermsValue}">Global Stats</a></p>`;
 
                         $.get(`/project/${searchTermsValue}`,
                                 data => {
-                                    $('#search_result').prepend(data).prepend(globalStats).prepend(readability);
+                                    $('#search_result').prepend(data).prepend(globalStats).prepend(globalReadability);
                                 });
                         currentSearchCount += 1;
                     } else {

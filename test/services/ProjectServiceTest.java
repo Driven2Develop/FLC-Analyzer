@@ -8,7 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import wsclient.MyWSClient;
-
+import static org.junit.Assert.*;
 import java.util.HashMap;
 import java.util.List;
 
@@ -26,6 +26,7 @@ import static services.TestData.TEST_SUBMITTIME_1;
 import static services.TestData.TEST_SUBMITTIME_2;
 import static services.TestData.TEST_TITLE_1;
 import static services.TestData.TEST_TITLE_2;
+import static services.TestData.TEST_PREVIEW_DESCRIPTION;
 
 /**
  * Unit tests for class <code>ProjectService</code>
@@ -89,6 +90,18 @@ public class ProjectServiceTest {
         List<Project> projects = projectService.findProjectsByOwnerId(DEFAULT_USER_ID).toCompletableFuture().get();
         validateData(projects);
     }
+    /**
+     * test method <code>computeProjectReadability</code> in class <code>ProjectService</code>
+     *
+     * @author Iymen Abdella
+     */
+    @Test
+    public void computeProjectReadability() throws Exception {
+        List<Readability> readability_list = projectService.computeProjectReadability(TEST_PREVIEW_DESCRIPTION);
+
+        assertTrue(readability_list.get(0).getScore() == 134 );
+        assertTrue(readability_list.get(0).geteducation_level() == "Early");
+    }
 
     /**
      * prepare data and mock objects before calling ProjectService methods
@@ -118,4 +131,5 @@ public class ProjectServiceTest {
         List<String> jobNameList = List.of("Java", "JavaScript");
         assertThat(projects).extracting(Project::getJobs).anyMatch(jobs -> jobs.stream().filter(job -> jobNameList.contains(job.getName())).findAny().isPresent());
     }
+
 }
