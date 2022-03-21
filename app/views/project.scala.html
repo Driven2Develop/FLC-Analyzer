@@ -1,0 +1,29 @@
+@import helpers.DateUtil
+@(projects : List[Project])
+
+<link rel="stylesheet" media="screen" href="@routes.Assets.versioned("css/bootstrap.min.css")">
+
+<section>
+    <div>
+        <article>
+            <table style="margin-left: auto; margin-right: auto;">
+            @for(i <- 0 to projects.size() - 1) {
+                <tr>
+                    <td text-align="center">@{i + 1}&#46;</td>
+                    <td text-align="center"><a href="@routes.HomeController.findUserById(projects.get(i).getOwnerId())">@projects.get(i).getOwnerId()</a></td>
+                    <td text-align="center">@DateUtil.formatDateString(projects.get(i).getTimeSubmitted())&#44;</td>
+                    <td text-align="left"><a href="#">@projects.get(i).getTitle()</a>&#44;</td>
+                    <td text-align="left">type:&nbsp;@projects.get(i).getType()&#44;</td>
+                    <td text-align="left">skills:
+                    @for(job <- projects.get(i).getJobs()) {
+                        &nbsp;<a href="@routes.HomeController.findProjectsByJobId(job.getId())">@job.getName()</a>
+                    }
+                    &#44;</td>
+                    <td><a href="@routes.HomeController.getProjectStats(projects.get(i).getPreviewDescription)">Stats</a>&#46;&nbsp;</td>
+                    <td><a href="@routes.HomeController.computeProjectReadability(projects.get(i).getPreviewDescription)">Readability</a>&#46;</td>
+                </tr>
+            }
+            </table>
+        </article>
+    </div>
+</section>

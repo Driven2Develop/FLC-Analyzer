@@ -1,0 +1,88 @@
+@import helpers.DateUtil
+@(user: User)
+
+@displayVerification(text: String, value: Boolean) = {
+    <tr>
+        <td>
+            @if(value != null && value) {
+                <i class="fa fa-check-circle success"></i>
+            } else {
+                <i class="fa fa-times-circle error"></i>
+            }
+            @text
+        </td>
+    </tr>
+}
+
+<link rel="stylesheet" media="screen" href="@routes.Assets.versioned("css/search_page.css")">
+<script type="text/javascript" src="@routes.Assets.versioned("js/jquery-3.6.0.min.js")"></script>
+<script type="text/javascript">
+    function getUserProjects() {
+        $.get(`/user/@user.getId()/projects`,
+            data => {
+                $('#user_projects').prepend(data);
+            });
+    }
+    $(function() {
+        getUserProjects();
+    })
+</script>
+
+<main>
+    <title>Freelancelot - @user.getDisplayName()</title>
+    <section>
+        <a href="/">< Back</a>
+        <h1>
+            @user.getDisplayName() (@user.getId())
+        </h1>
+        <table>
+            @displayVerification("Limited account", user.isLimitedAccount())
+            @displayVerification("Email verified", user.getStatus().getEmailVerified())
+            <tr>
+                <td>Name:</td>
+                <td>@user.getDisplayName()</td>
+            </tr>
+            <tr>
+                <td>Username:</td>
+                <td>@user.getUsername()</td>
+            </tr>
+            <tr>
+                <td>Joined date:</td>
+                <td>@DateUtil.formatDateString(user.getRegistrationDate())</td>
+            </tr>
+            <tr>
+                <td>Country:</td>
+                <td>
+                @if(user.getLocation() != null
+                        && user.getLocation().getCountry() != null
+                        && user.getLocation().getCountry().getName() != null) {
+                    @user.getLocation().getCountry().getName()
+                } else {
+                    -
+                }
+                <td>
+            </tr>
+            <tr>
+                <td>Primary Currency:</td>
+                <td>
+                @if(user.getPrimaryCurrency() != null
+                        && user.getPrimaryCurrency().getName() != null) {
+                    @user.getPrimaryCurrency().getName()
+                } else {
+                    -
+                }
+                <td>
+            </tr>
+            <tr>
+                <td>Role:</td>
+                <td>@user.getRole()<td>
+            </tr>
+            <tr>
+                <td>Chosen role:</td>
+                <td>@user.getChosenRole()<td>
+            </tr>
+        </table>
+    </section>
+    <div id="user_projects"></div>
+
+</main>
