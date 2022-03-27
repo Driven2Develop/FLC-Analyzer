@@ -54,7 +54,7 @@ public class ProjectService {
      * @author Mengqi Liu
      */
     public CompletionStage<List<Project>> searchLatestTenProjects(String searchTerms) {
-        return this.myWSClient.initRequest(PROJECT_SEARCH_URL + "&query=" + searchTerms.trim().replace(" ", "%20"))
+        return this.myWSClient.initRequest(PROJECT_SEARCH_URL + "&query=" + searchTerms.trim())
                 .getListResults(searchProjectsCache, searchTerms, Project.class, "projects");
     }
 
