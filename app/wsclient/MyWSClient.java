@@ -3,6 +3,8 @@ package wsclient;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import play.libs.ws.*;
 
 import java.util.HashMap;
@@ -19,6 +21,7 @@ import static helpers.JsonUtil.parseResultJsonNode;
 public class MyWSClient implements WSBodyReadables, WSBodyWritables {
     private final WSClient ws;
     private WSRequest request;
+    private final Logger logger = LoggerFactory.getLogger("MyWSClient");
     private static final String FREELANCER_SANDBOX_URL = "https://www.freelancer-sandbox.com/api";
     private static final String OAUTH_ACCESS_TOKEN = "JN7EzdE5iivghNOYapxJqjvKr8iEHP";
     private static final String OAUTH_HEADER_NAME = "freelancer-oauth-v1";
@@ -63,6 +66,7 @@ public class MyWSClient implements WSBodyReadables, WSBodyWritables {
         if(cache.containsKey(key)) {
             return cache.get(key);
         }
+        logger.debug(request.toString());
         CompletionStage<List<T>> results = this.request.get()
                 .thenApplyAsync(r -> {
                     JsonNode responseJsonNode = r.getBody(json());
