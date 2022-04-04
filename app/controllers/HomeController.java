@@ -1,19 +1,29 @@
 package controllers;
 
+import actors.UserSearchActor;
+import akka.actor.ActorSystem;
+import akka.stream.Materializer;
+import akka.stream.javadsl.Flow;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
 import models.Project;
-import models.User;
-import models.Readability;
+import play.libs.F;
 import play.libs.concurrent.HttpExecutionContext;
+import play.libs.streams.ActorFlow;
+import play.libs.ws.WSBodyReadables;
 import play.mvc.Controller;
+import play.mvc.Http;
 import play.mvc.Result;
+import play.mvc.WebSocket;
 import services.ProjectService;
 import services.StatsService;
 import services.UserService;
+import views.html.user;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Home controller for rendering main page and project search results.
@@ -22,12 +32,13 @@ import java.util.concurrent.CompletionStage;
  * @author Bowen Cheng
  * @author Yvonne Lee
  */
-public class HomeController extends Controller {
-
+public class HomeController extends Controller implements WSBodyReadables {
     private ProjectService projectService;
     private StatsService statsService;
     private UserService userService;
     private HttpExecutionContext httpExecutionContext;
+    private ActorSystem actorSystem;
+    private Materializer materializer;
 
     /**
      * Constructor for DI
@@ -38,11 +49,15 @@ public class HomeController extends Controller {
     public HomeController(ProjectService projectService,
                           StatsService statsService,
                           UserService userService,
-                          HttpExecutionContext httpExecutionContext) {
+                          HttpExecutionContext httpExecutionContext,
+                          ActorSystem actorSystem,
+                          Materializer materializer) {
         this.projectService = projectService;
         this.statsService = statsService;
         this.userService = userService;
         this.httpExecutionContext = httpExecutionContext;
+        this.actorSystem = actorSystem;
+        this.materializer = materializer;
     }
 
     /**
@@ -139,10 +154,8 @@ public class HomeController extends Controller {
      * @throws Exception exception
      * @author Yvonne Lee
      */
-    public CompletionStage<Result> findUserById(long userId) {
-        CompletionStage<User> userResponse = userService.findUserById(userId);
-        return userResponse
-                .thenApplyAsync(user -> ok(views.html.user.render(user)), httpExecutionContext.current());
+    public Result userProfile(String userId, Http.Request request) throws InterruptedException, ExecutionException {
+        return ok(user.render(request));
     }
 
     /**
@@ -158,4 +171,18 @@ public class HomeController extends Controller {
         return response
                 .thenApplyAsync(projects -> ok(views.html.userproject.render(projects)), httpExecutionContext.current());
     }
+
+    public WebSocket wsFindUser() {
+        return WebSocket.Json.accept(request -> ActorFlow.actorRef(ws -> UserSearchActor.props(ws, userService), actorSystem, materializer));
+    }
+
+    private CompletionStage<F.Either<Result, Flow<JsonNode, JsonNode, ?>>> createActorFlow(
+            Http.RequestHeader request) {
+        return CompletableFuture.completedFuture(F.Either.Right(createFlowForActor()));
+    }
+
+    private Flow<JsonNode, JsonNode, ?> createFlowForActor() {
+        return ActorFlow.actorRef(ws -> UserSearchActor.props(ws, userService), actorSystem, materializer);
+    }
+
 }

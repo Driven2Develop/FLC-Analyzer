@@ -10,7 +10,8 @@ GET        /stats/global/:searchTerms        controllers.HomeController.getGloba
 GET        /stats/single/:projectDesc        controllers.HomeController.getProjectStats(projectDesc: String)
 GET        /project/readability/:projectDesc controllers.HomeController.computeProjectReadability(projectDesc: String)
 GET        /project/readability/average/:searchTerms controllers.HomeController.computeProjectReadability(searchTerms: String)
-GET        /user/:userId                     controllers.HomeController.findUserById(userId: Long)
+GET        /user/:userId                     controllers.HomeController.userProfile(userId: String, request: Request)
+GET        /wsUser                             controllers.HomeController.wsFindUser
 GET        /user/:userId/projects            controllers.HomeController.findUserProjectsById(userId: Long)
 
 # Map static resources from the /public folder to the /assets URL path
