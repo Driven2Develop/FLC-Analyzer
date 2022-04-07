@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static helpers.DateUtil.parseDate;
 
@@ -27,6 +28,7 @@ public class User {
     private Location location;
     private Status status;
     private Currency primaryCurrency;
+    private List<Project> projects;
 
     public long getId() {
         return id;
@@ -106,5 +108,13 @@ public class User {
 
     public void setChosenRole(String chosenRole) {
         this.chosenRole = chosenRole;
+    }
+
+    public List<Project> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(List<Project> projects) {
+        this.projects = projects;
     }
 }
