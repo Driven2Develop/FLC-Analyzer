@@ -1,15 +1,13 @@
-@(projects: List[Project])
+@(request: play.mvc.Http.Request)
 
-<section>
+<head>
+    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/userproject.js")'></script>
+</head>
+<div id="user_projects_main" data-ws-url="@routes.HomeController.wsFindUserProjects.webSocketURL(request)">
     <h2>
         Last 10 projects
     </h2>
-    <table>
-        @for(project <- projects) {
-            <tr>
-                <td>@project.getTimeSubmitted()</td>
-                <td>@project.getTitle()</td>
-            </tr>
-        }
+    <table id="user_projects_data">
+        <tr></tr>
     </table>
-</section>
+</div>

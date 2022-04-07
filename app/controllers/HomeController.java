@@ -1,13 +1,12 @@
 package controllers;
 
+import actors.SupervisorActor;
+import actors.UserProjectSearchActor;
 import actors.UserSearchActor;
 import akka.actor.ActorSystem;
 import akka.stream.Materializer;
-import akka.stream.javadsl.Flow;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
 import models.Project;
-import play.libs.F;
 import play.libs.concurrent.HttpExecutionContext;
 import play.libs.streams.ActorFlow;
 import play.libs.ws.WSBodyReadables;
@@ -19,11 +18,11 @@ import services.ProjectService;
 import services.StatsService;
 import services.UserService;
 import views.html.user;
+import views.html.userproject;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Home controller for rendering main page and project search results.
@@ -44,6 +43,7 @@ public class HomeController extends Controller implements WSBodyReadables {
      * Constructor for DI
      *
      * @author Mengqi Liu
+     * @author Yvonne Lee
      */
     @Inject
     public HomeController(ProjectService projectService,
@@ -58,6 +58,9 @@ public class HomeController extends Controller implements WSBodyReadables {
         this.httpExecutionContext = httpExecutionContext;
         this.actorSystem = actorSystem;
         this.materializer = materializer;
+
+        actorSystem.actorOf(SupervisorActor.getProps(),"supervisorActor");
+
     }
 
     /**
@@ -151,11 +154,14 @@ public class HomeController extends Controller implements WSBodyReadables {
      *
      * @param userId user ID
      * @return user User
-     * @throws Exception exception
      * @author Yvonne Lee
      */
-    public Result userProfile(String userId, Http.Request request) throws InterruptedException, ExecutionException {
+    public Result userProfile(String userId, Http.Request request) {
         return ok(user.render(request));
+    }
+
+    public WebSocket wsFindUser() {
+        return WebSocket.Json.accept(request -> ActorFlow.actorRef(ws -> UserSearchActor.props(ws, userService), actorSystem, materializer));
     }
 
     /**
@@ -163,26 +169,14 @@ public class HomeController extends Controller implements WSBodyReadables {
      *
      * @param userId user ID
      * @return user User
-     * @throws Exception exception
      * @author Yvonne Lee
      */
-    public CompletionStage<Result> findUserProjectsById(long userId) {
-        CompletionStage<List<Project>> response = projectService.findProjectsByOwnerId(userId);
-        return response
-                .thenApplyAsync(projects -> ok(views.html.userproject.render(projects)), httpExecutionContext.current());
+    public Result findUserProjectsById(String userId, Http.Request request) {
+        return ok(userproject.render(request));
     }
 
-    public WebSocket wsFindUser() {
-        return WebSocket.Json.accept(request -> ActorFlow.actorRef(ws -> UserSearchActor.props(ws, userService), actorSystem, materializer));
+    public WebSocket wsFindUserProjects() {
+        System.out.println("Find user projects");
+        return WebSocket.Json.accept(request -> ActorFlow.actorRef(ws -> UserProjectSearchActor.props(ws, projectService), actorSystem, materializer));
     }
-
-    private CompletionStage<F.Either<Result, Flow<JsonNode, JsonNode, ?>>> createActorFlow(
-            Http.RequestHeader request) {
-        return CompletableFuture.completedFuture(F.Either.Right(createFlowForActor()));
-    }
-
-    private Flow<JsonNode, JsonNode, ?> createFlowForActor() {
-        return ActorFlow.actorRef(ws -> UserSearchActor.props(ws, userService), actorSystem, materializer);
-    }
-
 }

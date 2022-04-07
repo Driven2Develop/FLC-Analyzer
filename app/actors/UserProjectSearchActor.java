@@ -7,18 +7,19 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import helpers.ResponseUtil;
 import play.libs.Json;
+import services.ProjectService;
 import services.UserService;
 
 /**
- * UserSearchActor to fetch details for a user by making an API call every 10s
+ * UserProjectSearchActor to fetch projects for a user by making an API call every 10s
  * Subscribes to Supervisor Actor
  *
  * @author Yvonne Lee
  */
-public class UserSearchActor extends AbstractActor {
+public class UserProjectSearchActor extends AbstractActor {
 
     ActorRef websocket;
-    UserService userService;
+    ProjectService projectService;
 
     /**
      * Method call before Actor is started to subscribe to supervisor actor.
@@ -35,24 +36,24 @@ public class UserSearchActor extends AbstractActor {
      * UserSearchActor constructor
      *
      * @param websocket   Websocket Actor reference
-     * @param userService User Service reference
+     * @param projectService Project Service reference
      * @author Yvonne Lee
      */
-    public UserSearchActor(final ActorRef websocket, final UserService userService) {
+    public UserProjectSearchActor(final ActorRef websocket, final ProjectService projectService) {
         this.websocket = websocket;
-        this.userService = userService;
+        this.projectService = projectService;
     }
 
     /**
      * Method to get the Actor protocols and create the actor
      *
      * @param websocket   Websocket Actor reference
-     * @param userService User Service reference
+     * @param projectService Project Service reference
      * @return Props
      * @author Yvonne Lee
      */
-    public static Props props(final ActorRef websocket, final UserService userService) {
-        return Props.create(UserSearchActor.class, websocket, userService);
+    public static Props props(final ActorRef websocket, final ProjectService projectService) {
+        return Props.create(UserProjectSearchActor.class, websocket, projectService);
     }
 
     /**
@@ -69,13 +70,13 @@ public class UserSearchActor extends AbstractActor {
     }
 
     /**
-     * Method to fetch user details and send to UI.
+     * Method to fetch projects by user ID and send to UI.
      *
      * @param userId User ID
      * @author Yvonne Lee
      */
     private void sendNewData(String userId) {
-        userService.findUserById(Long.parseLong(userId))
+        projectService.findProjectsByOwnerId(Long.parseLong(userId))
                 .thenAccept(response -> {
                     //TODO: Add data to search history
                     JsonNode jsonObject = Json.toJson(response);
