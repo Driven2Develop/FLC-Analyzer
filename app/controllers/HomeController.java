@@ -176,7 +176,6 @@ public class HomeController extends Controller implements WSBodyReadables {
     }
 
     public WebSocket wsFindUserProjects() {
-        System.out.println("Find user projects");
         return WebSocket.Json.accept(request -> ActorFlow.actorRef(ws -> UserProjectSearchActor.props(ws, projectService), actorSystem, materializer));
     }
 }

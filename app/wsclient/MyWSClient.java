@@ -92,6 +92,9 @@ public class MyWSClient implements WSBodyReadables, WSBodyWritables {
      * @author Yvonne Lee
      */
     public <U, T> CompletionStage<T> getResults(HashMap<U, CompletionStage<T>> cache, U key, Class<T> classType) {
+        if(cache.containsKey(key)) {
+            return cache.get(key);
+        }
         CompletionStage<T> results = this.request.get()
                 .thenApplyAsync(r -> {
                     JsonNode responseJsonNode = r.getBody(json());
