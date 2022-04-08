@@ -1,5 +1,6 @@
 package controllers;
 
+import actors.ProjectSearchActor;
 import actors.SupervisorActor;
 import actors.UserProjectSearchActor;
 import actors.UserSearchActor;
@@ -17,6 +18,8 @@ import play.mvc.WebSocket;
 import services.ProjectService;
 import services.StatsService;
 import services.UserService;
+import views.html.index;
+import views.html.projectsearch;
 import views.html.user;
 import views.html.userproject;
 
@@ -59,7 +62,7 @@ public class HomeController extends Controller implements WSBodyReadables {
         this.actorSystem = actorSystem;
         this.materializer = materializer;
 
-        actorSystem.actorOf(SupervisorActor.getProps(),"supervisorActor");
+        actorSystem.actorOf(SupervisorActor.getProps(), "supervisorActor");
 
     }
 
@@ -68,9 +71,10 @@ public class HomeController extends Controller implements WSBodyReadables {
      *
      * @return index.scala.html page
      * @author Mengqi Liu
+     * @author Yvonne Lee
      */
-    public Result index() {
-        return ok(views.html.index.render());
+    public Result index(Http.Request request) {
+        return ok(index.render(request));
     }
 
     /**
@@ -79,11 +83,22 @@ public class HomeController extends Controller implements WSBodyReadables {
      * @param searchTerms search text input by user
      * @return Latest ten projects searched by the input terms through calling Freelancer API
      * @author Mengqi Liu
+     * @author Yvonne Lee
      */
-    public CompletionStage<Result> searchLatestTenProjects(String searchTerms) {
-        CompletionStage<List<Project>> searchProjectsResponse = projectService.searchLatestTenProjects(searchTerms);
-        return searchProjectsResponse.thenApplyAsync(projects -> ok(views.html.project.render(projects)), httpExecutionContext.current());
+    public Result searchLatestTenProjects(String searchTerms, Http.Request request) {
+        return ok(projectsearch.render(request));
     }
+
+    /**
+     * Websocket to search latest 10 projects
+     *
+     * @return Websocket object
+     * @author Yvonne Lee
+     */
+    public WebSocket wsSearchProjects() {
+        return WebSocket.Json.accept(request -> ActorFlow.actorRef(ws -> ProjectSearchActor.props(ws, projectService), actorSystem, materializer));
+    }
+
 
     /**
      * Search latest ten projects by jobId and present result to view asynchronously.
@@ -160,6 +175,12 @@ public class HomeController extends Controller implements WSBodyReadables {
         return ok(user.render(request));
     }
 
+    /**
+     * Web socket to get user
+     *
+     * @return WebSocket object
+     * @author Yvonne Lee
+     */
     public WebSocket wsFindUser() {
         return WebSocket.Json.accept(request -> ActorFlow.actorRef(ws -> UserSearchActor.props(ws, userService), actorSystem, materializer));
     }
@@ -175,6 +196,12 @@ public class HomeController extends Controller implements WSBodyReadables {
         return ok(userproject.render(request));
     }
 
+    /**
+     * Web socket to find projects by user
+     *
+     * @return WebSocket object
+     * @author Yvonne Lee
+     */
     public WebSocket wsFindUserProjects() {
         return WebSocket.Json.accept(request -> ActorFlow.actorRef(ws -> UserProjectSearchActor.props(ws, projectService), actorSystem, materializer));
     }

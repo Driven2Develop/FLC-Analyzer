@@ -3,8 +3,9 @@
 # ~~~~
 
 # A home controller showing a home page and search projects by search terms.
-GET        /                                                controllers.HomeController.index
-GET        /project/:searchTerms                            controllers.HomeController.searchLatestTenProjects(searchTerms: String)
+GET        /                                                controllers.HomeController.index(request :Request)
+GET        /project/:searchTerm                             controllers.HomeController.searchLatestTenProjects(searchTerm: String, request: Request)
+GET        /wsSearchProjects                                controllers.HomeController.wsSearchProjects
 GET        /project/job/:jobId                              controllers.HomeController.findProjectsByJobId(jobId: Long)
 GET        /stats/global/:searchTerms                       controllers.HomeController.getGlobalStats(searchTerms: String)
 GET        /stats/single/:projectDesc                       controllers.HomeController.getProjectStats(projectDesc: String)
