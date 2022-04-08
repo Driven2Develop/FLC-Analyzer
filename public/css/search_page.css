@@ -20,3 +20,13 @@
 .search_result {
     margin: 10px auto;
 }
+
+.search_projects_main {
+    margin-top: 30px;
+}
+
+.fa-spinner {
+    margin-top: 30px;
+    margin-bottom: 30px;
+    font-size: 50px;
+}
