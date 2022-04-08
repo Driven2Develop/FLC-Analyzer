@@ -1,0 +1,10 @@
+@(request: play.mvc.Http.Request)
+
+<head>
+    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/projectsearch.js")'></script>
+</head>
+<div id="search_projects_main" data-ws-url="@routes.HomeController.wsSearchProjects.webSocketURL(request)">
+    <div id="avg_readability"></div>
+    <div id="global_stats"></div>
+    <table id="search_result" class="search_result"></table>
+</div>

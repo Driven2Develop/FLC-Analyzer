@@ -19,6 +19,7 @@ public class UserSearchActor extends AbstractActor {
 
     ActorRef websocket;
     UserService userService;
+    long userId;
 
     /**
      * Method call before Actor is started to subscribe to supervisor actor.
@@ -64,7 +65,8 @@ public class UserSearchActor extends AbstractActor {
     @Override
     public Receive createReceive() {
         return receiveBuilder()
-                .match(ObjectNode.class, o -> sendNewData(o.get("keyword").textValue()))
+                .match(SupervisorActor.Data.class, this::sendNewData)
+                .match(ObjectNode.class, o -> this.userId = Long.parseLong(o.get("keyword").textValue()))
                 .build();
     }
 
@@ -74,8 +76,8 @@ public class UserSearchActor extends AbstractActor {
      * @param userId User ID
      * @author Yvonne Lee
      */
-    private void sendNewData(String userId) {
-        userService.findUserById(Long.parseLong(userId))
+    private void sendNewData(SupervisorActor.Data data) {
+        userService.findUserById(userId)
                 .thenAccept(response -> {
                     //TODO: Add data to search history
                     JsonNode jsonObject = Json.toJson(response);

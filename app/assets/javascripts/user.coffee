@@ -4,8 +4,6 @@ $ ->
   	ws.send(JSON.stringify({keyword: window.location.pathname.split("/").pop()}))
   ws.onmessage = (event) ->
     repo = JSON.parse event.data
-    callback = (data) -> $('#user_projects').html data
-    $.get '/user/' + repo.data.id + '/projects', callback
     $('#id').text(repo.data.id)
     $('#display_name').text(repo.data.display_name)
     $('#username').text(repo.data.username)
@@ -22,3 +20,5 @@ $ ->
         $('#is_email_verified').html '<td><i class="fa fa-check-circle success"></i> Email Verified</td>'
     else
         $('#is_email_verified').html '<td><i class="fa fa-times-circle error"></i> Email Verified</td>'
+  callback = (data) -> $('#user_projects').html data
+  $.get '/user/' + window.location.pathname.split("/").pop() + '/projects', callback

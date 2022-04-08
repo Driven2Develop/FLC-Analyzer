@@ -1,6 +1,6 @@
 @import "main.css";
 
-.search_input input[type='text']{
+.search_form input[type='text']{
     display: inline-block;
     width: 250px;
     border-radius: 15px;
@@ -8,11 +8,15 @@
     text-indent: 30px;
     border: 1px solid;
 }
-.search_input {
+.search_form {
     margin-top: 50px;
 }
-.search_input i {
+.search_form i {
     position: relative;
     left: 245px;
     color: #B2B2B2;
+}
+
+.search_result {
+    margin: 10px auto;
 }
