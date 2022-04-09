@@ -17,6 +17,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CompletionStage;
 
+import static java.util.stream.Collectors.partitioningBy;
+
 
 /**
  * Service layer class for processing projects
@@ -95,16 +97,18 @@ public class ProjectService {
         //count the number of syllables for each word
         //case 1: words with three letters or less count as one syllable
 
-        long syllable_count = Stream.of(words).filter(w -> w.size() < 4 ).count();
+        Map<Boolean, List<String>> syllables = words.stream().collect(partitioningBy(w -> w.length() < 4));
+        long syllable_count = syllables.get(true).stream().count();
 
         // case 2: each vowel in a word is one syllable, consecutive vowels count as one syllable
         // -es, -ed, -e (except -le) endings are ignored
         // regex will be used
-        Pattern regex = Pattern.compile("[aiou][aeiou]*|e[aeiou]*(?!d?|s?|\\b)");
+        Pattern regex = Pattern.compile("([aeiouyAEIOUY]+[^e.\\s])|([aiouyAEIOUY]+\\b)|(\\b[^aeiouy0-9.']+e\\b)");
 
-        List <Matcher> matches = words.stream().filter(w -> w.length() > 3 ) //only words larger than length 3
-                .map(w -> regex.matcher(w) ) //map word to the number of syllables it has
-                .collect(Collectors.toList()); // map matcher to number of good matches
+        // map matcher to number of good matches, then map word to the number of syllables it has
+        List <Matcher> matches = syllables.get(false).stream()
+                .map(regex::matcher)
+                .collect(Collectors.toList());
 
         // count the number of matches
         for (Matcher m : matches) {
@@ -122,16 +126,6 @@ public class ProjectService {
 
         //print results to console:
         System.out.println("Number of sentences: " + sentence_count + ". Number of words: " + word_count + ". Number of syllables: " + syllable_count + ".");
-
-        //error case to avoid dividing by zero.
-        if (sentence_count == 0){
-            System.out.println("No sentences detected. Description may be lacking correct punctuation. Default sentence count of 1 will be used.");
-            sentence_count = 1;
-        }
-        if (word_count == 0){
-            System.out.println("No words detected. Description may be lacking correct spacing. Default word count of 1 will be used.");
-            word_count = 1;
-        }
 
         score = (long) (206.835 - (84.6 * syllable_count/word_count) - (1.015 * word_count / sentence_count) );
         System.out.println("score: " + score);

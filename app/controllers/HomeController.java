@@ -125,11 +125,10 @@ public class HomeController extends Controller {
      * @return list of readability objects averaged out
      * @author Iymen Abdella
      */
-//    public CompletionStage<Result> getAverageReadability(String searchTerms) {
-//        return CompletableFuture
-//                .supplyAsync(() -> projectService.getAverageReadability(searchTerms))
-//                .thenApplyAsync(readability -> ok(views.html.Readability.render(readability.join())), httpExecutionContext.current());
-//    }
+    public CompletionStage<Result> getAverageReadability(String searchTerms) {
+        return projectService.getAverageReadability(searchTerms)
+                .thenApplyAsync(readability -> ok(views.html.Readability.render(readability)), httpExecutionContext.current());
+    }
 
     /**
      * Gets user by ID and presents result to view

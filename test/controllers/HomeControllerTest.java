@@ -109,4 +109,28 @@ public class HomeControllerTest extends WithApplication {
         Result result = route(app, request);
         assertEquals(OK, result.status());
     }
+
+    /**
+     * Test for the </code>/project/readability/:projectDesc</code> route
+     *
+     * @author Iymen Abdella
+     */
+    @Test
+    public void testGetReadability() {
+        Http.RequestBuilder request = new Http.RequestBuilder().method(GET).uri("/project/readability/description");
+        Result result = route(app, request);
+        assertEquals(OK, result.status());
+    }
+
+    /**
+     * Test for the </code>/project/readability/average/:searchTerms</code> route
+     *
+     * @author Iymen Abdella
+     */
+    @Test
+    public void testGetAverageReadability() {
+        Http.RequestBuilder request = new Http.RequestBuilder().method(GET).uri("/project/readability/average/write");
+        Result result = route(app, request);
+        assertEquals(OK, result.status());
+    }
 }
