@@ -80,7 +80,6 @@ public class UserProjectSearchActor extends AbstractActor {
     private void sendNewData(SupervisorActor.Data data) {
         projectService.findProjectsByOwnerId(userId)
                 .thenAccept(response -> {
-                    //TODO: Add data to search history
                     JsonNode jsonObject = Json.toJson(response);
                     websocket.tell(ResponseUtil.createResponse(jsonObject, true), self());
                 });

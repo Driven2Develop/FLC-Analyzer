@@ -9,7 +9,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import models.Job;
 import models.Project;
-import models.User;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,29 +17,24 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import play.libs.Json;
 import services.ProjectService;
-import services.UserService;
 
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
-import static helpers.DateUtil.parseDate;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 import static services.TestData.*;
-import static services.TestData.TEST_SUBMITTIME_2;
 
 /**
- * Unit test for UserProjectSearchActor class
+ * Unit test for ProjectSearchActor class
  *
  * @author Yvonne Lee
  */
 @RunWith(MockitoJUnitRunner.class)
-public class UserProjectSearchActorTest {
+public class ProjectSearchActorTest {
 
     private static ActorSystem system;
 
@@ -48,38 +42,39 @@ public class UserProjectSearchActorTest {
     private ProjectService projectService;
 
     private static String DEFAULT_USER_ID = "1";
+    private static final String DEFAULT_SEARCH_TERM = "Java";
 
     public static final Project TEST_PROJECT_1 = buildProject(TEST_TITLE_1, Long.parseLong(DEFAULT_USER_ID), DEFAULT_PROJECT_TYPE, TEST_JOBS_1);
     public static final Project TEST_PROJECT_2 = buildProject(TEST_TITLE_2, Long.parseLong(DEFAULT_USER_ID), DEFAULT_PROJECT_TYPE, TEST_JOBS_2);
     public static final CompletionStage<List<Project>> DEFAULT_PROJECTS = CompletableFuture.completedStage(List.of(TEST_PROJECT_1, TEST_PROJECT_2));
 
     /**
-     * Setup UserProjectSearchActor initial state
+     * Setup ProjectSearchActor initial state
      *
      * @author Yvonne Lee
      */
     @Before
     public void setup() {
         system = ActorSystem.create();
-        when(projectService.findProjectsByOwnerId(Long.parseLong(DEFAULT_USER_ID))).thenReturn(DEFAULT_PROJECTS);
+        when(projectService.searchLatestTenProjects(DEFAULT_SEARCH_TERM)).thenReturn(DEFAULT_PROJECTS);
     }
 
     /**
-     * Main test method for UserProjectSearchActor
+     * Main test method for ProjectSearchActor
      *
      * @author Yvonne Lee
      */
     @Test
-    public void testUserProjectSearchActor() {
+    public void testProjectSearchActor() {
         new TestKit(system) {
             {
-                final Props props = UserProjectSearchActor.props(getTestActor(), projectService);
+                final Props props = ProjectSearchActor.props(getTestActor(), projectService);
                 final ActorRef subject = system.actorOf(props);
                 within(
                         Duration.ofSeconds(10),
                         () -> {
                             ObjectNode testData = Json.newObject();
-                            testData.put("keyword", DEFAULT_USER_ID);
+                            testData.put("keyword", DEFAULT_SEARCH_TERM);
                             subject.tell(testData, getRef());
                             subject.tell(new SupervisorActor.Data(), getRef());
 

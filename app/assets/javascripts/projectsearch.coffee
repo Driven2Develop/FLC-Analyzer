@@ -5,6 +5,7 @@ $ ->
     ws.send(JSON.stringify({ keyword: searchTerm }))
   ws.onmessage = (event) ->
     $('#search_result').html ''
+    $('#loading_spinner').hide()
     repo = JSON.parse event.data
     header=$('<tr>
       <th id="count">#</th>
@@ -37,6 +38,7 @@ $ ->
       row1.append $('<tr />')
       $('#search_result').append row1
 
+  $('#search_term_text').text 'Search Term: ' + searchTerm
   $('#avg_readability').html '<h4><a href="/project/readability/average/' + searchTerm + '">Average Flesch Reading Ease Index</a></h4>'
   $('#global_stats').html '<h4><a href="/stats/global/' + searchTerm + '">Global Stats</a></h4>'
   $("#search_input").val("") # reset the form

@@ -67,9 +67,6 @@ public class UserSearchActorTest {
                 within(
                         Duration.ofSeconds(10),
                         () -> {
-                            subject.tell(new SupervisorActor.Data(), getRef());
-                            expectNoMsg();
-
                             ObjectNode testData = Json.newObject();
                             testData.put("keyword", DEFAULT_USER_ID);
                             subject.tell(testData, getRef());
