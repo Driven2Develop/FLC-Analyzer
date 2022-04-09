@@ -79,7 +79,6 @@ public class UserSearchActor extends AbstractActor {
     private void sendNewData(SupervisorActor.Data data) {
         userService.findUserById(userId)
                 .thenAccept(response -> {
-                    //TODO: Add data to search history
                     JsonNode jsonObject = Json.toJson(response);
                     websocket.tell(ResponseUtil.createResponse(jsonObject, true), self());
                 });
