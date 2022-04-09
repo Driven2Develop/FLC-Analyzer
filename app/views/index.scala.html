@@ -1,5 +1,4 @@
-@()
-
+@(request: play.mvc.Http.Request)
 
 <!DOCTYPE html>
 <html lang="en">
@@ -7,37 +6,19 @@
         <title>Freelancelot</title>
         <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("css/search_page.css")">
         <script type="text/javascript" src="@routes.Assets.versioned("js/jquery-3.6.0.min.js")"></script>
-        <script type="text/javascript">
-                const maxSearchCount = 10;
-                let currentSearchCount = 1;
-                function searchProjectsByTerms() {
-                    if (currentSearchCount <= maxSearchCount) {
-                        const searchTermsValue = $('#searchTerms').val();
-                        const globalReadability = `<h4>Search terms: ${searchTermsValue}</h4><h4><a href="/project/readability/average/${searchTermsValue}">Average Flesch Reading Ease Index</a><h4>`;
-                        const globalStats = `<p><a href="/stats/global/${searchTermsValue}">Global Stats</a></p>`;
-
-                        $.get(`/project/${searchTermsValue}`,
-                                data => {
-                                    $('#search_result').prepend(data).prepend(globalStats).prepend(globalReadability);
-                                });
-                        currentSearchCount += 1;
-                    } else {
-                        alert('We could only search for ' + maxSearchCount + ' times.');
-                    }
-                }
-        </script>
+        <script type="text/javascript" src="@routes.Assets.versioned("javascripts/index.js")"></script>
     </header>
-    <body>
+    <body data-ws-url="@routes.HomeController.wsSearchProjects.webSocketURL(request)">
         <section style="text-align: center;">
             <div>
                 <article>
                     <h1 class="main-title">Welcome to Freelancelot</h1>
-                    <div class="search_input">
+                    <form id="search_form" class="search_form">
                         <i class="fa fa-search" id="i-advanced-search-i"></i>
-                        <input id="searchTerms" type="text" id="i-advanced-search" placeholder="Enter search terms"/>
-                        &nbsp;&nbsp;<button class="btn" onclick="searchProjectsByTerms();">Go</button>
-                    </div>
-                    <div id="search_result"></div>
+                        <input id="search_input" type="text" id="i-advanced-search" placeholder="Enter search terms"/>
+                        <button type="submit" class="btn">Go</button>
+                    </form>
+                    <div id="result_data"></div>
                 </article>
             </div>
         </section>

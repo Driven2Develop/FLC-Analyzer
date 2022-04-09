@@ -1,15 +1,27 @@
 package controllers;
 
+import actors.ProjectSearchActor;
+import actors.SupervisorActor;
+import actors.UserProjectSearchActor;
+import actors.UserSearchActor;
+import akka.actor.ActorSystem;
+import akka.stream.Materializer;
 import com.google.inject.Inject;
 import models.Project;
-import models.User;
-import models.Readability;
 import play.libs.concurrent.HttpExecutionContext;
+import play.libs.streams.ActorFlow;
+import play.libs.ws.WSBodyReadables;
 import play.mvc.Controller;
+import play.mvc.Http;
 import play.mvc.Result;
+import play.mvc.WebSocket;
 import services.ProjectService;
 import services.StatsService;
 import services.UserService;
+import views.html.index;
+import views.html.projectsearch;
+import views.html.user;
+import views.html.userproject;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -22,27 +34,36 @@ import java.util.concurrent.CompletionStage;
  * @author Bowen Cheng
  * @author Yvonne Lee
  */
-public class HomeController extends Controller {
-
+public class HomeController extends Controller implements WSBodyReadables {
     private ProjectService projectService;
     private StatsService statsService;
     private UserService userService;
     private HttpExecutionContext httpExecutionContext;
+    private ActorSystem actorSystem;
+    private Materializer materializer;
 
     /**
      * Constructor for DI
      *
      * @author Mengqi Liu
+     * @author Yvonne Lee
      */
     @Inject
     public HomeController(ProjectService projectService,
                           StatsService statsService,
                           UserService userService,
-                          HttpExecutionContext httpExecutionContext) {
+                          HttpExecutionContext httpExecutionContext,
+                          ActorSystem actorSystem,
+                          Materializer materializer) {
         this.projectService = projectService;
         this.statsService = statsService;
         this.userService = userService;
         this.httpExecutionContext = httpExecutionContext;
+        this.actorSystem = actorSystem;
+        this.materializer = materializer;
+
+        actorSystem.actorOf(SupervisorActor.getProps(), "supervisorActor");
+
     }
 
     /**
@@ -50,9 +71,10 @@ public class HomeController extends Controller {
      *
      * @return index.scala.html page
      * @author Mengqi Liu
+     * @author Yvonne Lee
      */
-    public Result index() {
-        return ok(views.html.index.render());
+    public Result index(Http.Request request) {
+        return ok(index.render(request));
     }
 
     /**
@@ -61,11 +83,22 @@ public class HomeController extends Controller {
      * @param searchTerms search text input by user
      * @return Latest ten projects searched by the input terms through calling Freelancer API
      * @author Mengqi Liu
+     * @author Yvonne Lee
      */
-    public CompletionStage<Result> searchLatestTenProjects(String searchTerms) {
-        CompletionStage<List<Project>> searchProjectsResponse = projectService.searchLatestTenProjects(searchTerms);
-        return searchProjectsResponse.thenApplyAsync(projects -> ok(views.html.project.render(projects)), httpExecutionContext.current());
+    public Result searchLatestTenProjects(String searchTerms, Http.Request request) {
+        return ok(projectsearch.render(request));
     }
+
+    /**
+     * Websocket to search latest 10 projects
+     *
+     * @return Websocket object
+     * @author Yvonne Lee
+     */
+    public WebSocket wsSearchProjects() {
+        return WebSocket.Json.accept(request -> ActorFlow.actorRef(ws -> ProjectSearchActor.props(ws, projectService), actorSystem, materializer));
+    }
+
 
     /**
      * Search latest ten projects by jobId and present result to view asynchronously.
@@ -135,13 +168,20 @@ public class HomeController extends Controller {
      *
      * @param userId user ID
      * @return user User
-     * @throws Exception exception
      * @author Yvonne Lee
      */
-    public CompletionStage<Result> findUserById(long userId) {
-        CompletionStage<User> userResponse = userService.findUserById(userId);
-        return userResponse
-                .thenApplyAsync(user -> ok(views.html.user.render(user)), httpExecutionContext.current());
+    public Result userProfile(String userId, Http.Request request) {
+        return ok(user.render(request));
+    }
+
+    /**
+     * Web socket to get user
+     *
+     * @return WebSocket object
+     * @author Yvonne Lee
+     */
+    public WebSocket wsFindUser() {
+        return WebSocket.Json.accept(request -> ActorFlow.actorRef(ws -> UserSearchActor.props(ws, userService), actorSystem, materializer));
     }
 
     /**
@@ -149,12 +189,19 @@ public class HomeController extends Controller {
      *
      * @param userId user ID
      * @return user User
-     * @throws Exception exception
      * @author Yvonne Lee
      */
-    public CompletionStage<Result> findUserProjectsById(long userId) {
-        CompletionStage<List<Project>> response = projectService.findProjectsByOwnerId(userId);
-        return response
-                .thenApplyAsync(projects -> ok(views.html.userproject.render(projects)), httpExecutionContext.current());
+    public Result findUserProjectsById(String userId, Http.Request request) {
+        return ok(userproject.render(request));
+    }
+
+    /**
+     * Web socket to find projects by user
+     *
+     * @return WebSocket object
+     * @author Yvonne Lee
+     */
+    public WebSocket wsFindUserProjects() {
+        return WebSocket.Json.accept(request -> ActorFlow.actorRef(ws -> UserProjectSearchActor.props(ws, projectService), actorSystem, materializer));
     }
 }
