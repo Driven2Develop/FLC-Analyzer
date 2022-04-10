@@ -18,7 +18,7 @@ public class Readability {
 
     /**
      *
-     * @param s for the score, required for constuctor, default is 999
+     * @param s for the score, required for constructor, default is 999
      */
     public Readability(long s){
         this.score = s;

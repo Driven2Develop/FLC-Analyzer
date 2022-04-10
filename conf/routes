@@ -10,7 +10,7 @@ GET        /project/job/:jobId                              controllers.HomeCont
 GET        /stats/global/:searchTerms                       controllers.HomeController.getGlobalStats(searchTerms: String)
 GET        /stats/single/:projectDesc                       controllers.HomeController.getProjectStats(projectDesc: String)
 GET        /project/readability/:projectDesc                controllers.HomeController.computeProjectReadability(projectDesc: String)
-GET        /project/readability/average/:searchTerms        controllers.HomeController.computeProjectReadability(searchTerms: String)
+GET        /project/readability/average/:searchTerms        controllers.HomeController.getAverageReadability(searchTerms: String)
 GET        /user/:userId                                    controllers.HomeController.userProfile(userId: String, request: Request)
 GET        /wsUser                                          controllers.HomeController.wsFindUser
 GET        /user/:userId/projects                           controllers.HomeController.findUserProjectsById(userId: String, request: Request)

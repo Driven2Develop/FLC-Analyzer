@@ -145,12 +145,10 @@ public class HomeController extends Controller implements WSBodyReadables {
      * @return readability obejct based on project description
      * @author Iymen Abdella
      */
-    public CompletionStage<Result> computeProjectReadability(String projectDesc) {
-
-        return CompletableFuture
-                .supplyAsync(() -> projectService.computeProjectReadability(projectDesc))
-                .thenApplyAsync(readability -> ok(views.html.Readability.render(readability)), httpExecutionContext.current());
+    public Result computeProjectReadability(String projectDesc, Http.Request request) {
+        return ok(projectsearch.render(request));
     }
+
     /**
      * Gets average Flesch Readability index and presents result to view
      *
@@ -158,9 +156,8 @@ public class HomeController extends Controller implements WSBodyReadables {
      * @return list of readability objects averaged out
      * @author Iymen Abdella
      */
-    public CompletionStage<Result> getAverageReadability(String searchTerms) {
-        return projectService.getAverageReadability(searchTerms)
-                .thenApplyAsync(readability -> ok(views.html.Readability.render(readability)), httpExecutionContext.current());
+    public Result getAverageReadability(String searchTerms, Http.Request request) {
+        return ok(projectsearch.render(request));
     }
 
     /**
