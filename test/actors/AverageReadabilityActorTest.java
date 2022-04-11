@@ -104,6 +104,7 @@ public class AverageReadabilityActorTest {
     /**
      * static method to build object <code>Project</code>
      *
+     *
      * @author Yvonne
      */
     public static Project buildProject(String title, long ownerId, String jobType, List<Job> jobs, Readability r, String s) {
