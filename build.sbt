@@ -8,7 +8,6 @@ lazy val root = (project in file(".")).enablePlugins(PlayJava)
 // Works: scala 2.12, sbt 1.6.2, Homebrew Java 17.0.2
 scalaVersion := "2.12.2"
 lazy val akkaVersion = "2.6.18"
-lazy val akkaHttpVersion = "10.2.9"
 
 
 libraryDependencies ++= Seq(
