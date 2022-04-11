@@ -1,5 +1,6 @@
 package controllers;
 
+import actors.JobProjectSearchActor;
 import actors.ProjectSearchActor;
 import actors.SupervisorActor;
 import actors.UserProjectSearchActor;
@@ -22,8 +23,8 @@ import views.html.index;
 import views.html.projectsearch;
 import views.html.user;
 import views.html.userproject;
+import views.html.project;
 
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
@@ -107,11 +108,19 @@ public class HomeController extends Controller implements WSBodyReadables {
      * @return Latest ten projects searched by the skill id through calling Freelancer API
      * @author Mengqi Liu
      */
-    public CompletionStage<Result> findProjectsByJobId(long jobId) {
-        CompletionStage<List<Project>> searchProjectsResponse = projectService.findProjectsByJobId(jobId);
-        return searchProjectsResponse.thenApplyAsync(projects -> ok(views.html.project.render(projects)), httpExecutionContext.current());
+    public Result findProjectsByJobId(long jobId, Http.Request request) {
+        return ok(project.render(request));
     }
 
+    /**
+     * Web socket to get projects by job id
+     *
+     * @return WebSocket object
+     * @author Mengqi Liu
+     */
+    public WebSocket wsFindProjectsByJobId() {
+        return WebSocket.Json.accept(request -> ActorFlow.actorRef(ws -> JobProjectSearchActor.props(ws, projectService), actorSystem, materializer));
+    }
 
     /**
      * Gets global stats and presents result to view
