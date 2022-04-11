@@ -1,11 +1,13 @@
 $ ->
   searchTerm = $("#search_input").val()
+  searchNum = $("#search_count").text()
+  console.log(searchNum)
   ws = new WebSocket $("#search_projects_main").data("ws-url")
   ws.onopen = (event) ->
     ws.send(JSON.stringify({ keyword: searchTerm }))
   ws.onmessage = (event) ->
-    $('#search_result').html ''
     $('#loading_spinner').hide()
+    $('#search_result_' + searchNum).html ''
     repo = JSON.parse event.data
     header=$('<tr>
       <th id="count">#</th>
@@ -36,8 +38,9 @@ $ ->
       row1.append $('<td/>').html '<a href="/stats/single/' + repo.data[x].preview_description + '">View Stats</a>'
       row1.append $('<td/>').html '<a href="/project/readability/' + repo.data[x].preview_description + '">View Readability</a>'
       row1.append $('<tr />')
-      $('#search_result').append row1
+      $('#search_result_' + searchNum).append row1
 
+  $('#search_projects_container').append $('<table id="search_result_' + searchNum + '" className="search_result"></table>')
   $('#search_term_text').text 'Search Term: ' + searchTerm
   $('#avg_readability').html '<h4><a href="/project/readability/average/' + searchTerm + '">Average Flesch Reading Ease Index</a></h4>'
   $('#global_stats').html '<h4><a href="/stats/global/' + searchTerm + '">Global Stats</a></h4>'
