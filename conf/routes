@@ -6,7 +6,8 @@
 GET        /                                                controllers.HomeController.index(request :Request)
 GET        /project/:searchTerm                             controllers.HomeController.searchLatestTenProjects(searchTerm: String, request: Request)
 GET        /wsSearchProjects                                controllers.HomeController.wsSearchProjects
-GET        /project/job/:jobId                              controllers.HomeController.findProjectsByJobId(jobId: Long)
+GET        /project/job/:jobId                              controllers.HomeController.findProjectsByJobId(jobId: Long, request: Request)
+GET        /wsFindProjectsByJobId                           controllers.HomeController.wsFindProjectsByJobId
 GET        /stats/global/:searchTerms                       controllers.HomeController.getGlobalStats(searchTerms: String)
 GET        /stats/single/:projectDesc                       controllers.HomeController.getProjectStats(projectDesc: String)
 GET        /project/readability/:projectDesc                controllers.HomeController.computeProjectReadability(projectDesc: String)
