@@ -66,7 +66,7 @@ public class JobProjectSearchActor extends AbstractActor {
     public Receive createReceive() {
         return receiveBuilder()
                 .match(SupervisorActor.Data.class, this::sendNewData)
-                .match(ObjectNode.class, o -> this.jobId = o.get("jobId").asLong())
+                .match(ObjectNode.class, o -> this.jobId = Long.parseLong(o.get("jobId").textValue()))
                 .build();
     }
 
