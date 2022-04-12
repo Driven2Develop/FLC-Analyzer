@@ -1,0 +1,18 @@
+@(request: play.mvc.Http.Request)
+<html>
+    <head>
+        <title>Freelancelot</title>
+        <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("css/search_page.css")">
+        <script type="text/javascript" src="@routes.Assets.versioned("js/jquery-3.6.0.min.js")"></script>
+        <script type='text/javascript' src='@routes.Assets.versioned("javascripts/statsglobal.js")'></script>
+    </head>
+    <div id="stats_global" class="search_projects_main" data-ws-url="@routes.HomeController.wsGetGlobalStats.webSocketURL(request)">
+        <section style="text-align: center;">
+            <div id="loading_spinner" class="loading_spinner">
+                <i class="fa fa-spinner"></i>
+                <p>Searching...</p>
+            </div>
+            <table id="search_result" style="margin: 0 auto;"></table>
+        </section>
+    </div>
+</html>

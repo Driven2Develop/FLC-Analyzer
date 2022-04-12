@@ -28,7 +28,7 @@ import java.util.concurrent.CompletionStage;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
-/*
+/**
  * Unit test for JobProjectSearchActor class
  *
  * @author Mengqi Liu

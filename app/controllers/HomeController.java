@@ -1,14 +1,9 @@
 package controllers;
 
-import actors.JobProjectSearchActor;
-import actors.ProjectSearchActor;
-import actors.SupervisorActor;
-import actors.UserProjectSearchActor;
-import actors.UserSearchActor;
+import actors.*;
 import akka.actor.ActorSystem;
 import akka.stream.Materializer;
 import com.google.inject.Inject;
-import models.Project;
 import play.libs.concurrent.HttpExecutionContext;
 import play.libs.streams.ActorFlow;
 import play.libs.ws.WSBodyReadables;
@@ -19,11 +14,7 @@ import play.mvc.WebSocket;
 import services.ProjectService;
 import services.StatsService;
 import services.UserService;
-import views.html.index;
-import views.html.projectsearch;
-import views.html.user;
-import views.html.userproject;
-import views.html.project;
+import views.html.*;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
@@ -125,26 +116,44 @@ public class HomeController extends Controller implements WSBodyReadables {
     /**
      * Gets global stats and presents result to view
      *
-     * @param searchTerms search text
+     * @param searchTerm search text
      * @return list of stats
      * @author Bowen Cheng
      */
-    public CompletionStage<Result> getGlobalStats(String searchTerms) {
-        return statsService.getGlobalStats(searchTerms)
-                .thenApplyAsync(stats -> ok(views.html.Stats.render(stats)), httpExecutionContext.current());
+    public Result getGlobalStats(String searchTerm, Http.Request request) {
+        return ok(statsglobal.render(request));
     }
 
     /**
-     * Gets global stats and presents result to view
+     * Web socket to get global stats
+     *
+     * @return Websocket object
+     * @author Bowen Cheng
+     */
+    public WebSocket wsGetGlobalStats() {
+        return WebSocket.Json.accept(request -> ActorFlow.actorRef(ws -> StatsGlobalActor.props(ws, statsService), actorSystem, materializer));
+    }
+
+    /**
+     * Gets project stats and presents result to view
      *
      * @param projectDesc project description to get stats from
      * @return list of stats
      * @author Bowen Cheng
      */
-    public CompletionStage<Result> getProjectStats(String projectDesc) {
-        return CompletableFuture
-                .supplyAsync(() -> statsService.getProjectStats(projectDesc))
-                .thenApplyAsync((stats) -> ok(views.html.Stats.render(stats)));
+    public Result getProjectStats(String projectDesc, Http.Request request) {
+        return ok(statsproject.render(request));
+
+    }
+
+    /**
+     * Web socket to get project stats
+     *
+     * @return Websocket object
+     * @author Bowen Cheng
+     */
+    public WebSocket wsGetProjectStats() {
+        return WebSocket.Json.accept(request -> ActorFlow.actorRef(ws -> StatsProjectActor.props(ws, statsService), actorSystem, materializer));
     }
 
     /**
