@@ -4,18 +4,8 @@ $ ->
     ws.send(JSON.stringify({jobId: window.location.pathname.split("/").pop()}))
   ws.onmessage = (event) ->
     $('#loading_spinner').hide()
+    $("#search_result").html ''
     repo = JSON.parse event.data
-    header=$('<tr>
-      <th id="count">#</th>
-      <th id="owner_id">Owner ID</th>
-      <th id="time_submitted">Time Submitted</th>
-      <th id="title">Title</th>
-      <th id="type">Type</th>
-      <th id="skills">Skills</th>
-      <th id="stats">Stats</th>
-      <th id="project_readability">Project Readability</th>
-    </tr>')
-    $('#search_result').append header
     for x in [0..repo.data.length-1]
       row1=$('<tr>')
       row1.append $('<td/>').text(x + 1)
