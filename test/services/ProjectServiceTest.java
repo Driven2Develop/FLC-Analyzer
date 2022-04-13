@@ -91,7 +91,7 @@ public class ProjectServiceTest {
         List<Readability> readability_list1 = projectService.computeProjectReadability(null);
         assertEquals(readability_list1.get(0).getScore(), 999L);
 
-        List<Readability> readability_list2 = projectService.computeProjectReadability(TEST_PREVIEW_DESCRIPTION);
+        List<Readability> readability_list2 = projectService.computeProjectReadability(TEST_PREVIEW_DESCRIPTION[0]);
         assertTrue(readability_list2.get(0).getScore() == 134 );
         assertTrue(readability_list2.get(0).geteducation_level() == "Early");
     }
