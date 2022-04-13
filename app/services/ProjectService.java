@@ -135,35 +135,6 @@ public class ProjectService {
     }
 
     /**
-     * Get average readability for top 250 projects based on description preview<br>
-     * Implemented using Stream API
-     *
-     * @param searchTerms text used to search for projects
-     * @return List of readability objects
-     * @author Iymen Abdella
-     */
-    public CompletionStage<List<Readability>> getAverageReadability(String searchTerms) {
-
-        CompletionStage<List<Project>> results =  this.myWSClient.initRequest(PROJECT_SEARCH_URL + "&query=" + searchTerms.trim().replace(" ", "%20"))
-                .getListResults(searchProjectsCache, searchTerms, Project.class, "projects");
-
-        return results.thenApplyAsync(
-                projects -> {
-                    List<Long> average_score = projects.stream().map(Project::getPreviewDescription)
-                            .map(desc -> computeProjectReadability(desc).get(0))
-                            .map(Readability::getScore)//map the readability objects to the score
-                            .collect(Collectors.toList());
-
-                    double average = average_score.stream() //compute average score
-                            .mapToDouble(d -> d)
-                            .average()
-                            .orElse(0.0);
-
-                    return new ArrayList<Readability>(Arrays.asList(new Readability((long) average)));
-                });
-    }
-
-    /**
      * Get projects by owner ID<br>
      * Implemented using Stream API
      *

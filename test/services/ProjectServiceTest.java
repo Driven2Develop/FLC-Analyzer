@@ -88,31 +88,12 @@ public class ProjectServiceTest {
      */
     @Test
     public void computeProjectReadability() throws Exception {
-        assertNotNull(TEST_PROJECT_1.getReadability());
-        for (String r: TEST_PREVIEW_DESCRIPTION) {
+        List<Readability> readability_list1 = projectService.computeProjectReadability(null);
+        assertEquals(readability_list1.get(0).getScore(), 999L);
 
-            List<Readability> readability_list = projectService.computeProjectReadability(r);
-            Readability read = new Readability(readability_list.get(0).getScore());
-            read.seteducation_level(readability_list.get(0).geteducation_level());
-            read.setScore(readability_list.get(0).getScore());
-
-            assertTrue(readability_list.get(0).getScore() == read.getScore() );
-            assertTrue(readability_list.get(0).geteducation_level() == read.geteducation_level());
-        }
-    }
-
-    /**
-     * test method <code>getAverageReadability</code> in class <code>ProjectService</code>
-     *
-     * @author Iymen Abdella
-     */
-    @Test
-    public void testGetAverageReadability() throws Exception{
-        when(myWSClient.getListResults(new HashMap(), SEARCH_TERMS_JAVA, Project.class, "projects")).thenReturn(FUTURE_PROJECTS);
-
-        List<Readability> projects = projectService.getAverageReadability(SEARCH_TERMS_JAVA).toCompletableFuture().get();
-        assertTrue(projects.get(0).getScore() == 48);
-        assertTrue(projects.get(0).geteducation_level() == "College");
+        List<Readability> readability_list2 = projectService.computeProjectReadability(TEST_PREVIEW_DESCRIPTION);
+        assertTrue(readability_list2.get(0).getScore() == 134 );
+        assertTrue(readability_list2.get(0).geteducation_level() == "Early");
     }
 
     /**
