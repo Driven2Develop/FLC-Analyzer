@@ -112,12 +112,12 @@ public class ProjectService {
      */
     public List<Readability> computeProjectReadability(String previewDescription) {
 
-        previewDescription = previewDescription.replace("%20", " ");
         //null case, empty case, blank case, no letters case
         if (previewDescription == null || previewDescription.isBlank() || previewDescription.chars().allMatch(Character::isLetter) ){
 
             return new ArrayList<Readability>(Arrays.asList(new Readability(999)));
         }
+        previewDescription = previewDescription.replace("%20", " ");
 
         //else calculate preview description readability
         String[] sentences = previewDescription.split("\\.|\\!|\\?|:|;"); // get all the sentences
