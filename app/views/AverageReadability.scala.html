@@ -4,9 +4,9 @@
         <title>Freelancelot</title>
         <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("css/search_page.css")">
         <script type="text/javascript" src="@routes.Assets.versioned("js/jquery-3.6.0.min.js")"></script>
-        <script type='text/javascript' src='@routes.Assets.versioned("javascripts/readability.js")'></script>
+        <script type='text/javascript' src='@routes.Assets.versioned("javascripts/averagereadability.js")'></script>
     </head>
-    <div id="readability" class="search_projects_main" data-ws-url="@routes.HomeController.wsComputeProjectReadability.webSocketURL(request)">
+    <div id="average_readability" class="search_projects_main" data-ws-url="@routes.HomeController.wsAverageReadability.webSocketURL(request)">
         <section style="text-align: center;">
             <div id="loading_spinner" class="loading_spinner">
                 <i class="fa fa-spinner"></i>

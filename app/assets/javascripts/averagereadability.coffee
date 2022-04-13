@@ -1,5 +1,5 @@
 $ ->
-  ws = new WebSocket $("#readability").data("ws-url")
+  ws = new WebSocket $("#average_readability").data("ws-url")
   ws.onopen = (event) ->
     ws.send(JSON.stringify({keyword: window.location.pathname.split("/").pop()}))
   ws.onmessage = (event) ->

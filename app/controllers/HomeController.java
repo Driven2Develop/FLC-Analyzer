@@ -163,9 +163,9 @@ public class HomeController extends Controller implements WSBodyReadables {
      * @author Iymen Abdella
      */
 
-//    public Result computeProjectReadability(String searchTerms, Http.Request request) {
-//        return ok(Readability.render(request));
-//    }
+    public Result computeProjectReadability(String searchTerms, Http.Request request) {
+        return ok(Readability.render(request));
+    }
 
     public WebSocket wsComputeProjectReadability() {
         return WebSocket.Json.accept(request -> ActorFlow.actorRef(ws -> DescriptionReadabilityActor.props(ws, projectService), actorSystem, materializer));
@@ -177,9 +177,10 @@ public class HomeController extends Controller implements WSBodyReadables {
      * @return list of readability objects averaged out
      * @author Iymen Abdella
      */
-//    public Result getAverageReadability(String searchTerms, Http.Request request) {
-//        return ok(user.render(request));
-//    }
+    public Result getAverageReadability(String searchTerms, Http.Request request) {
+        return ok(AverageReadability.render(request));
+    }
+
     public WebSocket wsAverageReadability() {
         return WebSocket.Json.accept(request -> ActorFlow.actorRef(ws -> AverageReadabilityActor.props(ws, projectService), actorSystem, materializer));
     }

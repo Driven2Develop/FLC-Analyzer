@@ -4,6 +4,7 @@ import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
 import akka.testkit.javadsl.TestKit;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import models.Job;
 import models.Project;
@@ -13,17 +14,21 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import play.libs.Json;
 import services.ProjectService;
 import services.TestData;
 
 import java.time.Duration;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 import static services.TestData.*;
@@ -58,7 +63,9 @@ public class DescriptionReadabilityActorTest {
     @Before
     public void setup() {
         system = ActorSystem.create();
-        doReturn(TEST_PROJECT_1.getReadability().getScore()).when(projectService.computeProjectReadability(TEST_PROJECT_1.getPreviewDescription()));
+        //doReturn(TEST_PROJECT_1.getReadability().getScore()).when(projectService.computeProjectReadability(TEST_PROJECT_1.getPreviewDescription()));
+        Mockito.when(projectService.computeProjectReadability(TEST_PROJECT_1.getPreviewDescription())).thenAnswer(invocationOnMock -> TEST_PROJECT_1.getReadability().getScore());
+
     }
 
     /**
@@ -67,21 +74,21 @@ public class DescriptionReadabilityActorTest {
      * @author Iymen Abdella
      */
     @Test
-    public void testAverageReadabilityActor() {
+    public void testDescriptionReadabilityActor() {
         new TestKit(system) {
             {
-                final Props props = AverageReadabilityActor.props(getTestActor(), projectService);
+                final Props props = DescriptionReadabilityActor.props(getTestActor(), projectService);
                 final ActorRef subject = system.actorOf(props);
                 within(
                         Duration.ofSeconds(10),
                         () -> {
                             ObjectNode testData = Json.newObject();
-                            testData.put("keyword", DEFAULT_SEARCH_TERM);
+                            testData.put("keyword", TEST_PROJECT_1.getPreviewDescription());
                             subject.tell(testData, getRef());
                             subject.tell(new SupervisorActor.Data(), getRef());
 
                             ObjectNode node = expectMsgClass(ObjectNode.class);
-                            assertNotNull(node);
+                            validateData(node);
                             return null;
                         });
             }
@@ -115,5 +122,19 @@ public class DescriptionReadabilityActorTest {
         project.setReadability(r);
         project.setPreviewDescription(s);
         return project;
+    }
+
+    /**
+     * validate received project data
+     *
+     * @author Iymen Abdella
+     */
+    private void validateData(ObjectNode node) {
+        ObjectMapper mapper = new ObjectMapper();
+        List readability = mapper.convertValue(node.get("data"), List.class);
+        Map map = (Map) readability.get(1);
+        assertFalse(readability.isEmpty());
+        assertEquals(29L, ((LinkedHashMap<?, ?>) map.get("readability")).get("score"));
+        assertEquals("College Graduate", ((LinkedHashMap<?, ?>) map.get("readability")).get("education_level"));
     }
 }
