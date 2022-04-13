@@ -6,13 +6,14 @@
 GET        /                                                controllers.HomeController.index(request :Request)
 GET        /project/:searchTerm                             controllers.HomeController.searchLatestTenProjects(searchTerm: String, request: Request)
 GET        /wsSearchProjects                                controllers.HomeController.wsSearchProjects
-GET        /project/job/:jobId                              controllers.HomeController.findProjectsByJobId(jobId: Long)
-GET        /stats/global/:searchTerms                       controllers.HomeController.getGlobalStats(searchTerms: String)
-GET        /stats/single/:projectDesc                       controllers.HomeController.getProjectStats(projectDesc: String)
-#GET        /project/readability/:projectDesc                controllers.HomeController.computeProjectReadability(projectDesc: String, request: Request)
-#GET        /project/readability/average/:searchTerms        controllers.HomeController.getAverageReadability(searchTerms: String, request: Request)
-GET        /wsReadability                                   controllers.HomeController.wsComputeProjectReadability
-GET        /wsAverageReadability                            controllers.HomeController.wsAverageReadability
+GET        /project/job/:jobId                              controllers.HomeController.findProjectsByJobId(jobId: Long, request: Request)
+GET        /wsFindProjectsByJobId                           controllers.HomeController.wsFindProjectsByJobId
+GET        /stats/global/:searchTerm                        controllers.HomeController.getGlobalStats(searchTerm: String, request: Request)
+GET        /wsGetGlobalStats                                controllers.HomeController.wsGetGlobalStats
+GET        /stats/single/:projectDesc                       controllers.HomeController.getProjectStats(projectDesc: String, request: Request)
+GET        /wsGetProjectStats                               controllers.HomeController.wsGetProjectStats
+GET        /project/readability/:projectDesc                controllers.HomeController.computeProjectReadability(projectDesc: String)
+GET        /project/readability/average/:searchTerms        controllers.HomeController.computeProjectReadability(searchTerms: String)
 GET        /user/:userId                                    controllers.HomeController.userProfile(userId: String, request: Request)
 GET        /wsUser                                          controllers.HomeController.wsFindUser
 GET        /user/:userId/projects                           controllers.HomeController.findUserProjectsById(userId: String, request: Request)

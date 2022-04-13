@@ -4,7 +4,6 @@ import actors.*;
 import akka.actor.ActorSystem;
 import akka.stream.Materializer;
 import com.google.inject.Inject;
-import models.Project;
 import play.libs.concurrent.HttpExecutionContext;
 import play.libs.streams.ActorFlow;
 import play.libs.ws.WSBodyReadables;
@@ -17,7 +16,6 @@ import services.StatsService;
 import services.UserService;
 import views.html.*;
 
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
@@ -101,35 +99,61 @@ public class HomeController extends Controller implements WSBodyReadables {
      * @return Latest ten projects searched by the skill id through calling Freelancer API
      * @author Mengqi Liu
      */
-    public CompletionStage<Result> findProjectsByJobId(long jobId) {
-        CompletionStage<List<Project>> searchProjectsResponse = projectService.findProjectsByJobId(jobId);
-        return searchProjectsResponse.thenApplyAsync(projects -> ok(views.html.project.render(projects)), httpExecutionContext.current());
+    public Result findProjectsByJobId(long jobId, Http.Request request) {
+        return ok(project.render(request));
     }
 
+    /**
+     * Web socket to get projects by job id
+     *
+     * @return WebSocket object
+     * @author Mengqi Liu
+     */
+    public WebSocket wsFindProjectsByJobId() {
+        return WebSocket.Json.accept(request -> ActorFlow.actorRef(ws -> JobProjectSearchActor.props(ws, projectService), actorSystem, materializer));
+    }
 
     /**
      * Gets global stats and presents result to view
      *
-     * @param searchTerms search text
+     * @param searchTerm search text
      * @return list of stats
      * @author Bowen Cheng
      */
-    public CompletionStage<Result> getGlobalStats(String searchTerms) {
-        return statsService.getGlobalStats(searchTerms)
-                .thenApplyAsync(stats -> ok(views.html.Stats.render(stats)), httpExecutionContext.current());
+    public Result getGlobalStats(String searchTerm, Http.Request request) {
+        return ok(statsglobal.render(request));
     }
 
     /**
-     * Gets global stats and presents result to view
+     * Web socket to get global stats
+     *
+     * @return Websocket object
+     * @author Bowen Cheng
+     */
+    public WebSocket wsGetGlobalStats() {
+        return WebSocket.Json.accept(request -> ActorFlow.actorRef(ws -> StatsGlobalActor.props(ws, statsService), actorSystem, materializer));
+    }
+
+    /**
+     * Gets project stats and presents result to view
      *
      * @param projectDesc project description to get stats from
      * @return list of stats
      * @author Bowen Cheng
      */
-    public CompletionStage<Result> getProjectStats(String projectDesc) {
-        return CompletableFuture
-                .supplyAsync(() -> statsService.getProjectStats(projectDesc))
-                .thenApplyAsync((stats) -> ok(views.html.Stats.render(stats)));
+    public Result getProjectStats(String projectDesc, Http.Request request) {
+        return ok(statsproject.render(request));
+
+    }
+
+    /**
+     * Web socket to get project stats
+     *
+     * @return Websocket object
+     * @author Bowen Cheng
+     */
+    public WebSocket wsGetProjectStats() {
+        return WebSocket.Json.accept(request -> ActorFlow.actorRef(ws -> StatsProjectActor.props(ws, statsService), actorSystem, materializer));
     }
 
     /**

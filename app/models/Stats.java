@@ -13,8 +13,8 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class Stats {
 
-    private String word;
-    private int occurrence;
+    private final String word;
+    private final int occurrence;
 
     public Stats(String word, int occurrence) {
         this.word = word;
