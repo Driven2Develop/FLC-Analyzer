@@ -1,9 +1,6 @@
 package controllers;
 
-import actors.ProjectSearchActor;
-import actors.SupervisorActor;
-import actors.UserProjectSearchActor;
-import actors.UserSearchActor;
+import actors.*;
 import akka.actor.ActorSystem;
 import akka.stream.Materializer;
 import com.google.inject.Inject;
@@ -18,10 +15,7 @@ import play.mvc.WebSocket;
 import services.ProjectService;
 import services.StatsService;
 import services.UserService;
-import views.html.index;
-import views.html.projectsearch;
-import views.html.user;
-import views.html.userproject;
+import views.html.*;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -141,23 +135,29 @@ public class HomeController extends Controller implements WSBodyReadables {
     /**
      * Gets readability and presents result to view
      *
-     * @param projectDesc project description to get stats from
-     * @return readability obejct based on project description
+     * @return readability object based on project description
      * @author Iymen Abdella
      */
-    public Result computeProjectReadability(String projectDesc, Http.Request request) {
-        return ok(projectsearch.render(request));
+
+//    public Result computeProjectReadability(String searchTerms, Http.Request request) {
+//        return ok(Readability.render(request));
+//    }
+
+    public WebSocket wsComputeProjectReadability() {
+        return WebSocket.Json.accept(request -> ActorFlow.actorRef(ws -> DescriptionReadabilityActor.props(ws, projectService), actorSystem, materializer));
     }
 
     /**
      * Gets average Flesch Readability index and presents result to view
      *
-     * @param searchTerms text being searched
      * @return list of readability objects averaged out
      * @author Iymen Abdella
      */
-    public Result getAverageReadability(String searchTerms, Http.Request request) {
-        return ok(projectsearch.render(request));
+//    public Result getAverageReadability(String searchTerms, Http.Request request) {
+//        return ok(user.render(request));
+//    }
+    public WebSocket wsAverageReadability() {
+        return WebSocket.Json.accept(request -> ActorFlow.actorRef(ws -> AverageReadabilityActor.props(ws, projectService), actorSystem, materializer));
     }
 
     /**

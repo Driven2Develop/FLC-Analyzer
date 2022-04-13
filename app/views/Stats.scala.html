@@ -1,5 +1,7 @@
 @import helpers.DateUtil
 
+@import akka.actor.dungeon.ChildrenContainer.EmptyChildrenContainer.stats
+@import akka.actor.dungeon.ChildrenContainer.EmptyChildrenContainer.stats
 @(stats : List[Stats])
 
 <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("css/bootstrap.min.css")">
@@ -13,13 +15,11 @@
                     <th>Word</th>
                     <th>Occurrence</th>
                 </tr>
-            @for(i <- 0 to stats.size() - 1) {
                 <tr>
                     <td text-align="center">@{i + 1}&#46;</td>
                     <td text-align="left">@stats.get(i).getWord</td>
                     <td text-align="center">@stats.get(i).getOccurrence</td>
                 </tr>
-            }
             </table>
         </article>
     </div>

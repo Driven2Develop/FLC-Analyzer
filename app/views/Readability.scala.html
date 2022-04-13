@@ -1,25 +1,25 @@
-@import helpers.DateUtil
-@(readability : List[Readability])
+@import akka.actor.dungeon.ChildrenContainer.EmptyChildrenContainer.stats
+@import akka.actor.dungeon.ChildrenContainer.EmptyChildrenContainer.stats
+@(request: play.mvc.Http.Request)
 
-<link rel="stylesheet" media="screen" href="@routes.Assets.versioned("css/bootstrap.min.css")">
-
-<section>
-    <div>
-        <article>
-            <table style="margin-left: auto; margin-right: auto;">
-                <tr>
-                    <th>#</th>
-                    <th>Flesch Readability Index</th>
-                    <th>Educational Level</th>
-                </tr>
-            @for(i <- 0 to readability.size() - 1) {
-                <tr>
-                    <td text-align="center">@{i + 1}&#46;</td>
-                    <td text-align="left">@readability.get(i).getScore</td>
-                    <td text-align="center">@readability.get(i).geteducation_level</td>
-                </tr>
-            }
-            </table>
-        </article>
-    </div>
-</section>
+<head>
+    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/readability.js")'></script>
+</head>
+<div id="user_projects_main" data-ws-url="@routes.HomeController.wsAverageReadability.webSocketURL(request)">
+    <h2>
+        Last 10 projects
+    </h2>
+    <table>
+        <tr>
+            <th>Score</th>
+            <th>Education Level</th>
+        </tr>
+        @for(i <- 0 to projectsearch. - 1) {
+            <tr>
+                <td text-align="center">@{i + 1}&#46;</td>
+                <td text-align="left">@stats.get(i).getWord</td>
+                <td text-align="center">@stats.get(i).getOccurrence</td>
+            </tr>
+        }
+    </table>
+</div>
