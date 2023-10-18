@@ -1,4 +1,4 @@
-# SOEN6441 Winter 2022 - Final Project
+# FLC Analyzer
 
 ## About this Repo 
 * An asynchronous web application using the Play framework. The FLC analyzer application is meant to describe and view job postings pulled from the LINKEDIN API.
